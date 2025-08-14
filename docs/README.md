@@ -16,12 +16,16 @@
 ### 🔌 [API.md](./API.md)
 GitHub API統合の詳細、使用するエンドポイント、データ構造、エラーハンドリングについて説明しています。
 
+### 🎨 [DESIGN_REQUIREMENTS.md](./DESIGN_REQUIREMENTS.md)
+UI/UXデザイン要件、カラーパレット、レイアウト指針、アクセシビリティについて詳述しています。
+
 ## クイックスタート
 
 1. **プロジェクト概要を読む** - [PROJECT_OVERVIEW.md](./PROJECT_OVERVIEW.md)で全体像を把握
-2. **アーキテクチャを理解** - [ARCHITECTURE.md](./ARCHITECTURE.md)でシステム設計を確認
-3. **実装開始** - [IMPLEMENTATION.md](./IMPLEMENTATION.md)の手順に従ってセットアップ
-4. **API連携** - [API.md](./API.md)でGitHub API統合の詳細を確認
+2. **デザイン要件を確認** - [DESIGN_REQUIREMENTS.md](./DESIGN_REQUIREMENTS.md)でUI/UX方針を理解
+3. **アーキテクチャを理解** - [ARCHITECTURE.md](./ARCHITECTURE.md)でシステム設計を確認
+4. **実装開始** - [IMPLEMENTATION.md](./IMPLEMENTATION.md)の手順に従ってセットアップ
+5. **API連携** - [API.md](./API.md)でGitHub API統合の詳細を確認
 
 ## 必要な環境
 
