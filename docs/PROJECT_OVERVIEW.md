@@ -13,9 +13,9 @@
 - **言語**: TypeScript
 
 ### バックエンド/データ層
-- **データ更新**: GitHub APIを使用したNode.js CLI
+- **データ更新**: GitHub CLIコマンド（`gh`）を使用したNode.js CLI
 - **データストレージ**: JSONファイル
-- **APIクライアント**: Octokit (GitHub API)
+- **GitHubクライアント**: GitHub CLI (`gh` command)
 
 ## 主要機能
 
@@ -38,11 +38,11 @@
 - 最終更新タイムスタンプ
 
 ### データ更新システム
-- GitHubから最新データを取得するCLIツール
+- GitHub CLIコマンド（`gh`）を使用して最新データを取得するCLIツール
 - 取得する情報:
-  - GitHubリリース情報
-  - マイルストーン進捗
-  - プルリクエストステータス
+  - GitHubリリース情報（`gh release list`、`gh release view`）
+  - マイルストーン進捗（`gh api repos/{owner}/{repo}/milestones`）
+  - プルリクエストステータス（`gh pr list`、`gh pr view`）
   - App Storeバージョン・アイコン（iTunes Search API）
   - Google Playバージョン（今後実装予定/Flutterプロジェクトの場合のみ）
 - 手動実行のCLIコマンド
@@ -64,6 +64,14 @@
 - モダンなJavaScriptランタイム
 - npm/yarnと比較して優れたパフォーマンス
 
+### なぜGitHub CLI（gh）？
+- 公式のGitHub CLIツールで信頼性が高い
+- 認証の管理が簡単（`gh auth login`）
+- REST APIとGraphQL APIの両方をサポート
+- JSONレスポンスの直接取得が可能
+- レート制限の自動管理
+- プライベートリポジトリへのアクセスが容易
+
 ### なぜJSONストレージ？
 - ローカルダッシュボード用のシンプルなファイルベースストレージ
 - データベースのセットアップ不要
@@ -78,7 +86,7 @@
 4. **カスタマイズ**: 必要に応じてコンポーネントとスタイルを変更
 
 ## セキュリティ考慮事項
-- GitHub APIトークンは環境変数に保存
+- GitHub CLI認証を使用（`gh auth login`）
 - プライベートリポジトリのサポート
 - フロントエンドに機密データを公開しない
 - ローカル環境専用ダッシュボード（パブリックホスティングなし／今後もなし）
@@ -87,5 +95,5 @@
 - ダッシュボードのロード時間 < 1秒
 - 10アプリのデータ更新完了 < 30秒
 - ローカルマシンでの最小限のリソース使用
-- 効率的なGitHub API使用（レート制限の遵守）
+- GitHub CLI経由での効率的なAPI使用（レート制限の遵守）
 

@@ -1,65 +1,51 @@
 # API ドキュメント
 
-## GitHub API 統合
+## GitHub CLI 統合
 
-### 認証
-
-GitHub APIへのアクセスには個人アクセストークン（PAT）が必要です。
-
-#### 必要なスコープ
-- `public_repo` - パブリックリポジトリへのアクセス
-- `repo` - プライベートリポジトリへのアクセス（必要な場合）
-
-#### トークンの設定
-```bash
-# .envファイルに設定
-GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
-```
-
-### 使用するAPIエンドポイント
+### 使用するGitHub CLIコマンド
 
 #### 1. リポジトリ情報の取得
-```typescript
-GET /repos/{owner}/{repo}
+```bash
+gh repo view {owner}/{repo} --json name,description,url,defaultBranchRef,updatedAt
 ```
 
 **レスポンス例:**
 ```json
 {
   "name": "app-name",
-  "full_name": "owner/app-name",
   "description": "アプリの説明",
-  "html_url": "https://github.com/owner/app-name",
-  "default_branch": "main",
-  "updated_at": "2024-08-14T10:00:00Z"
+  "url": "https://github.com/owner/app-name",
+  "defaultBranchRef": {
+    "name": "main"
+  },
+  "updatedAt": "2024-08-14T10:00:00Z"
 }
 ```
 
 #### 2. 最新リリースの取得
-```typescript
-GET /repos/{owner}/{repo}/releases/latest
+```bash
+gh release view --repo {owner}/{repo} --json tagName,name,publishedAt,url,body
 ```
 
 **レスポンス例:**
 ```json
 {
-  "tag_name": "v1.2.3",
+  "tagName": "v1.2.3",
   "name": "Release v1.2.3",
-  "published_at": "2024-08-10T10:00:00Z",
-  "html_url": "https://github.com/owner/app-name/releases/tag/v1.2.3",
+  "publishedAt": "2024-08-10T10:00:00Z",
+  "url": "https://github.com/owner/app-name/releases/tag/v1.2.3",
   "body": "リリースノート内容"
 }
 ```
 
 #### 3. マイルストーンの取得
-```typescript
-GET /repos/{owner}/{repo}/milestones
-```
+```bash
+# オープン状態のマイルストーンを取得
+gh api repos/{owner}/{repo}/milestones --jq '.[] | select(.state == "open")'
 
-**パラメータ:**
-- `state`: `open` | `closed` | `all`
-- `sort`: `due_on` | `completeness`
-- `direction`: `asc` | `desc`
+# 完了率でソート
+gh api repos/{owner}/{repo}/milestones?sort=completeness&direction=desc
+```
 
 **レスポンス例:**
 ```json
@@ -76,27 +62,25 @@ GET /repos/{owner}/{repo}/milestones
 ```
 
 #### 4. プルリクエストの取得
-```typescript
-GET /repos/{owner}/{repo}/pulls
-```
+```bash
+# オープンなPRを最新順で取得（最新3件）
+gh pr list --repo {owner}/{repo} --state open --limit 3 --json title,url,state,createdAt,updatedAt,mergedAt,author
 
-**パラメータ:**
-- `state`: `open` | `closed` | `all`
-- `sort`: `created` | `updated` | `popularity`
-- `direction`: `asc` | `desc`
-- `per_page`: 取得件数（デフォルト: 30、最大: 100）
+# マージ済みPRを取得
+gh pr list --repo {owner}/{repo} --state merged --limit 5
+```
 
 **レスポンス例:**
 ```json
 [
   {
     "title": "認証バグの修正",
-    "html_url": "https://github.com/owner/app-name/pull/42",
-    "state": "open",
-    "created_at": "2024-08-12T10:00:00Z",
-    "updated_at": "2024-08-12T14:30:00Z",
-    "merged_at": null,
-    "user": {
+    "url": "https://github.com/owner/app-name/pull/42",
+    "state": "OPEN",
+    "createdAt": "2024-08-12T10:00:00Z",
+    "updatedAt": "2024-08-12T14:30:00Z",
+    "mergedAt": null,
+    "author": {
       "login": "username"
     }
   }
@@ -146,9 +130,6 @@ interface App {
   
   // プラットフォーム
   platform: 'ios' | 'android' | 'both';
-  
-  // アイコン（APIから自動取得）
-  icon?: string;
   
   // ストアバージョン
   storeVersions?: {
@@ -200,63 +181,6 @@ bun run update:app <app-id>
 | `--app <id>` | 特定のアプリIDのみ更新 | `--app app1` |
 | `--verbose` | 詳細なログを出力 | `--verbose` |
 | `--dry-run` | 実際の更新を行わずにテスト実行 | `--dry-run` |
-
-## エラーハンドリング
-
-### APIレート制限
-GitHub APIには以下のレート制限があります：
-- 認証なし: 60リクエスト/時間
-- 認証あり: 5,000リクエスト/時間
-
-レート制限に達した場合の対処：
-1. 環境変数 `GITHUB_TOKEN` が正しく設定されているか確認
-2. キャッシュを活用して不要なリクエストを削減
-3. バッチ処理間隔を調整
-
-### エラーコード
-
-| コード | 説明 | 対処法 |
-|-------|------|--------|
-| 401 | 認証エラー | トークンの有効性を確認 |
-| 403 | アクセス権限なし | トークンのスコープを確認 |
-| 404 | リソースが見つからない | リポジトリ名を確認 |
-| 422 | 検証エラー | リクエストパラメータを確認 |
-| 429 | レート制限超過 | 時間をおいて再試行 |
-
-## キャッシュ戦略
-
-### ローカルキャッシュ
-```typescript
-interface CacheEntry {
-  data: any;
-  timestamp: number;
-  etag?: string;
-}
-
-// キャッシュの有効期限（ミリ秒）
-const CACHE_TTL = {
-  release: 3600000,    // 1時間
-  milestone: 1800000,  // 30分
-  pulls: 600000,       // 10分
-};
-```
-
-### 条件付きリクエスト
-ETagを使用した条件付きリクエスト：
-```typescript
-const response = await octokit.request('GET /repos/{owner}/{repo}', {
-  owner,
-  repo,
-  headers: {
-    'If-None-Match': cachedEtag
-  }
-});
-
-// 304 Not Modified の場合、キャッシュを使用
-if (response.status === 304) {
-  return cachedData;
-}
-```
 
 ## App Store 情報の取得
 

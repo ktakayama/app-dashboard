@@ -10,7 +10,6 @@ bun create astro@latest . --template minimal --typescript strict
 
 # 主要な依存関係のインストール例
 bun add astro @astrojs/svelte @astrojs/tailwind
-bun add -d @octokit/rest dotenv commander
 ```
 
 ### 2. 主要な設定ファイル
@@ -18,7 +17,6 @@ bun add -d @octokit/rest dotenv commander
 - `astro.config.mjs` - Astro設定（Svelte、TailwindCSS統合）
 - `tsconfig.json` - TypeScript設定
 - `tailwind.config.cjs` - TailwindCSS設定
-- `.env` - 環境変数（GitHub Token等）
 - `config.json` - 監視対象アプリ設定
 
 ## 主要コンポーネント
@@ -30,23 +28,13 @@ bun add -d @octokit/rest dotenv commander
 ## CLIスクリプト
 
 ### 主要機能
-- GitHub API経由でのデータ取得
+- GitHub CLI（`gh`）経由でのデータ取得
 - iTunes Search APIでのApp Store情報取得
 - JSONファイルへのデータ保存
 
 ### 実装するファイル
-- `scripts/update-data.ts` - メイン更新スクリプト
-- `scripts/github-api.ts` - GitHub API操作
-- `scripts/store-api.ts` - ストアAPI操作
-
-## 環境変数設定
-
-### .env.example
-```bash
-# GitHub Personal Access Token
-# Required scopes: repo (for private repos), public_repo (for public repos)
-GITHUB_TOKEN=your_github_token_here
-```
+- `scripts/update-data.js` - メイン更新スクリプト（GitHub CLI使用）
+- `scripts/store-api.js` - ストアAPI操作
 
 ## 設定ファイル
 
@@ -96,10 +84,10 @@ GITHUB_TOKEN=your_github_token_here
 - `bun run build` - 本番ビルド
 - `bun run update` - データ更新
 
-
 ## 使用方法
 
-1. **初期設定** - 環境変数とconfig.jsonを設定
-2. **データ更新** - `bun run update`でデータ取得
-3. **ダッシュボード起動** - `bun run dev`でローカルサーバー開始
-4. **本番ビルド** - `bun run build`で静的ファイル生成
+1. **GitHub CLI認証** - `gh auth login`で認証設定
+2. **設定ファイル** - config.jsonを設定
+3. **データ更新** - `bun run update`でデータ取得
+4. **ダッシュボード起動** - `bun run dev`でローカルサーバー開始
+5. **本番ビルド** - `bun run build`で静的ファイル生成

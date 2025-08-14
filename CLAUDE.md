@@ -24,23 +24,22 @@ bun run test          # Run Vitest tests
 ## Tech Stack
 - **Runtime**: Bun (always use over npm/yarn)
 - **Frontend**: Astro + Svelte + TailwindCSS
-- **Data**: JSON files, GitHub API, iTunes Search API
+- **Data**: JSON files, GitHub CLI (`gh`), iTunes Search API
 
 ## Key Architecture Points
 
 ### Data Flow
-CLI scripts → GitHub/iTunes APIs → JSON storage → Astro/Svelte rendering
+CLI scripts → GitHub CLI (`gh`) + iTunes APIs → JSON storage → Astro/Svelte rendering
 
 ### Critical Files
 - `src/data/apps.json` - App data storage
 - `scripts/update-data.js` - Data fetching CLI
 - `config.json` - Repository configuration
-- `.env` - GitHub token (required)
 
 ## Development Notes
 
 - **Documentation**: Detailed docs in `docs/` (Japanese)
 - **Local Only**: Never deploy publicly
-- **API Limits**: GitHub has 5000 req/hour with auth
+- **API Limits**: GitHub CLI handles rate limiting automatically
 - **Bun First**: Always prefer `bun` commands
 - **Manual Updates**: Data refreshes via CLI only, no auto-polling
