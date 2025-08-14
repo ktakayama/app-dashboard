@@ -5,18 +5,23 @@
 ## ドキュメント一覧
 
 ### 📋 [PROJECT_OVERVIEW.md](./PROJECT_OVERVIEW.md)
+
 プロジェクトの概要、目的、技術スタック、主要機能について説明しています。
 
 ### 🏗️ [ARCHITECTURE.md](./ARCHITECTURE.md)
+
 システムアーキテクチャ、ディレクトリ構造、コンポーネント設計、データフローについて詳述しています。
 
 ### 💻 [IMPLEMENTATION.md](./IMPLEMENTATION.md)
+
 実際の実装手順、セットアップ方法、コンポーネントとCLIスクリプトのコード例を提供しています。
 
 ### 🔌 [API.md](./API.md)
+
 GitHub API統合の詳細、使用するエンドポイント、データ構造、エラーハンドリングについて説明しています。
 
 ### 🎨 [DESIGN_REQUIREMENTS.md](./DESIGN_REQUIREMENTS.md)
+
 UI/UXデザイン要件、カラーパレット、レイアウト指針、アクセシビリティについて詳述しています。
 
 ## クイックスタート
@@ -40,4 +45,3 @@ UI/UXデザイン要件、カラーパレット、レイアウト指針、アク
 1. 各ドキュメントのトラブルシューティングセクション
 2. [IMPLEMENTATION.md](./IMPLEMENTATION.md)の使用方法セクション
 3. [API.md](./API.md)のエラーハンドリングセクション
-

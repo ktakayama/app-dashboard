@@ -31,15 +31,16 @@ app-dashboard/
 └── [設定ファイル等]
 ```
 
-
 ### データフロー
 
 1. **データ更新プロセス**
+
    ```
    GitHub API → CLIスクリプト → データ処理 → JSONへ書き込み → ダッシュボードが読み込み
    ```
 
 2. **レンダリングプロセス**
+
    ```
    apps.json → Astroページ → Svelteコンポーネント → HTML出力
    ```
@@ -52,26 +53,28 @@ app-dashboard/
 ## データスキーマ
 
 ### アプリデータ構造
+
 ```typescript
 interface AppData {
   apps: App[];
 }
 
 interface App {
-  id: string;                    // 一意識別子
-  name: string;                  // 表示名
-  repository: string;            // GitHubリポジトリ (owner/name)
-  platform: 'ios' | 'android' | 'both';  // プラットフォーム
-  icon?: string;                 // アイコンURL（APIから自動取得）
-  links: AppLinks;              // 外部リンク
-  latestRelease: Release;       // 最新リリース情報（GitHub）
-  storeVersions?: {             // ストアバージョン
+  id: string; // 一意識別子
+  name: string; // 表示名
+  repository: string; // GitHubリポジトリ (owner/name)
+  platform: 'ios' | 'android' | 'both'; // プラットフォーム
+  icon?: string; // アイコンURL（APIから自動取得）
+  links: AppLinks; // 外部リンク
+  latestRelease: Release; // 最新リリース情報（GitHub）
+  storeVersions?: {
+    // ストアバージョン
     appStore?: string;
     playStore?: string;
   };
-  milestone: Milestone;          // 現在のマイルストーン
-  recentPRs: PullRequest[];     // 最近のPR
-  lastUpdated: string;          // ISO 8601タイムスタンプ
+  milestone: Milestone; // 現在のマイルストーン
+  recentPRs: PullRequest[]; // 最近のPR
+  lastUpdated: string; // ISO 8601タイムスタンプ
 }
 
 interface AppLinks {
@@ -103,12 +106,14 @@ interface PullRequest {
 ## API統合
 
 ### 使用するGitHub APIエンドポイント
+
 - `/repos/{owner}/{repo}` - リポジトリ情報
 - `/repos/{owner}/{repo}/releases/latest` - 最新リリース
 - `/repos/{owner}/{repo}/milestones` - マイルストーンデータ
 - `/repos/{owner}/{repo}/pulls` - プルリクエスト
 
 ### レート制限戦略
+
 - レスポンスをローカルにキャッシュ
 - APIリクエストをバッチ処理
 - 条件付きリクエストを使用 (ETags)
@@ -117,9 +122,11 @@ interface PullRequest {
 ## ビルドプロセス
 
 1. **開発ビルド**
+
    ```bash
    bun run dev
    ```
+
    - ホットモジュールリプレースメント
    - ソースマップ有効
    - デバッグログ
@@ -135,14 +142,17 @@ interface PullRequest {
 ## ローカル実行
 
 ### 開発環境
+
 ```bash
 bun run dev
 ```
 
 ### ビルドしたファイルの確認
+
 ```bash
 bun run build
 bun run preview
 ```
 
 ※ ローカル環境でのみ使用するため、デプロイは不要です。
+

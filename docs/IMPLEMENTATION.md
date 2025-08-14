@@ -28,17 +28,20 @@ bun add astro @astrojs/svelte @astrojs/tailwind
 ## CLIスクリプト
 
 ### 主要機能
+
 - GitHub CLI（`gh`）経由でのデータ取得
 - iTunes Search APIでのApp Store情報取得
 - JSONファイルへのデータ保存
 
 ### 実装するファイル
+
 - `scripts/update-data.js` - メイン更新スクリプト（GitHub CLI使用）
 - `scripts/store-api.js` - ストアAPI操作
 
 ## 設定ファイル
 
 ### config.json
+
 ```json
 {
   "apps": [
@@ -80,6 +83,7 @@ bun add astro @astrojs/svelte @astrojs/tailwind
 ## package.jsonスクリプト
 
 主要なコマンド：
+
 - `bun run dev` - 開発サーバー起動
 - `bun run build` - 本番ビルド
 - `bun run update` - データ更新
