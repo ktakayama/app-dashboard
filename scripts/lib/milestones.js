@@ -13,9 +13,9 @@ import { ghAPI } from './github-cli.js';
 export async function getMilestones(owner, repo) {
   try {
     const milestones = await ghAPI(`repos/${owner}/${repo}/milestones`);
-    
+
     // Filter only open milestones
-    return milestones.filter(milestone => milestone.state === 'open');
+    return milestones.filter((milestone) => milestone.state === 'open');
   } catch {
     // No milestones found or other error
     return [];
@@ -31,18 +31,18 @@ export async function getMilestones(owner, repo) {
 export async function getCurrentMilestone(owner, repo) {
   try {
     const milestones = await getMilestones(owner, repo);
-    
+
     if (milestones.length === 0) {
       return null;
     }
-    
+
     // Find the milestone with the lowest semantic version number
     const activeMilestone = findActiveMilestone(milestones);
-    
+
     if (!activeMilestone) {
       return null;
     }
-    
+
     return formatMilestoneData(activeMilestone);
   } catch {
     return null;
@@ -57,11 +57,11 @@ export async function getCurrentMilestone(owner, repo) {
  */
 export function calculateProgress(openIssues, closedIssues) {
   const totalIssues = openIssues + closedIssues;
-  
+
   if (totalIssues === 0) {
     return 0;
   }
-  
+
   return Math.round((closedIssues / totalIssues) * 100);
 }
 
@@ -74,12 +74,12 @@ function findActiveMilestone(milestones) {
   if (milestones.length === 0) {
     return null;
   }
-  
+
   // Sort milestones by semantic version (ascending)
   const sortedMilestones = milestones
-    .filter(milestone => milestone.title)
+    .filter((milestone) => milestone.title)
     .sort((a, b) => compareSemanticVersions(a.title, b.title));
-  
+
   return sortedMilestones[0] || null;
 }
 
@@ -96,18 +96,18 @@ function compareSemanticVersions(versionA, versionB) {
     if (!match) return null;
     return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])];
   };
-  
+
   const versionDataA = extractVersion(versionA);
   const versionDataB = extractVersion(versionB);
-  
+
   // If one has no version data, put it after the one with version data
   if (!versionDataA && !versionDataB) return 0;
   if (!versionDataA) return 1;
   if (!versionDataB) return -1;
-  
+
   const [majorA, minorA, patchA] = versionDataA;
   const [majorB, minorB, patchB] = versionDataB;
-  
+
   if (majorA !== majorB) return majorA - majorB;
   if (minorA !== minorB) return minorA - minorB;
   return patchA - patchB;
@@ -122,7 +122,7 @@ function formatMilestoneData(milestoneData) {
   const openIssues = milestoneData.open_issues || 0;
   const closedIssues = milestoneData.closed_issues || 0;
   const totalIssues = openIssues + closedIssues;
-  
+
   return {
     title: milestoneData.title,
     openIssues,
@@ -130,7 +130,7 @@ function formatMilestoneData(milestoneData) {
     totalIssues,
     progress: calculateProgress(openIssues, closedIssues),
     dueOn: milestoneData.due_on ? formatDate(milestoneData.due_on) : null,
-    url: milestoneData.html_url
+    url: milestoneData.html_url,
   };
 }
 
