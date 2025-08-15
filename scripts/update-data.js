@@ -89,7 +89,7 @@ try {
   const startTime = Date.now();
   await processAllApps(config, options, logger);
   const endTime = Date.now();
-  const duration = Math.round((endTime - startTime) / 1000 * 100) / 100;
+  const duration = Math.round(((endTime - startTime) / 1000) * 100) / 100;
 
   logger.success(`Update completed in ${duration}s`);
 } catch (error) {
@@ -105,10 +105,10 @@ try {
 async function processAllApps(config, options, logger) {
   const { mergeAppData } = await import('./lib/data-merger.js');
   const { writeAppsJson } = await import('./lib/json-writer.js');
-  
+
   // Process all apps in parallel with error handling
   logger.info('Processing all apps in parallel...');
-  
+
   const results = await Promise.allSettled(
     config.repositories.map(async (repoConfig) => {
       logger.verbose(`Processing ${repoConfig.repository}...`);
@@ -131,7 +131,9 @@ async function processAllApps(config, options, logger) {
         repository: repoConfig.repository,
         error: result.reason.message,
       });
-      logger.error(`Failed to process ${repoConfig.repository}: ${result.reason.message}`);
+      logger.error(
+        `Failed to process ${repoConfig.repository}: ${result.reason.message}`
+      );
     }
   });
 
@@ -148,7 +150,9 @@ async function processAllApps(config, options, logger) {
       await writeAppsJson(successfulApps, outputPath, logger);
     } else {
       logger.info('Dry run mode - skipping file write');
-      logger.info(`Would write ${successfulApps.length} apps to ${config.outputPath || 'src/data/apps.json'}`);
+      logger.info(
+        `Would write ${successfulApps.length} apps to ${config.outputPath || 'src/data/apps.json'}`
+      );
     }
   } else {
     throw new CLIError('No apps were successfully processed');
