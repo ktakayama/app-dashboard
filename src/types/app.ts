@@ -2,7 +2,7 @@ export interface PullRequest {
   number: number;
   title: string;
   url: string;
-  state: "open" | "merged" | "closed";
+  state: 'open' | 'merged' | 'closed';
   mergedAt?: string;
 }
 
@@ -24,7 +24,7 @@ export interface App {
   id: string;
   name: string;
   repository: string;
-  platform: "ios" | "android";
+  platform: 'ios' | 'android';
   icon: string;
   links: {
     github: string;
