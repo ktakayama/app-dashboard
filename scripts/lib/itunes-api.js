@@ -35,8 +35,37 @@ async function fetchFromItunes(url) {
  * @returns {Promise<object|null>} App Store information or null if not found
  */
 export async function searchAppByBundleId(bundleId) {
-  // TODO: Implement Bundle ID search
-  return null;
+  if (!bundleId || typeof bundleId !== 'string') {
+    return null;
+  }
+
+  try {
+    const searchParams = new URLSearchParams({
+      term: bundleId,
+      entity: 'software',
+      country: 'jp',
+      limit: '1'
+    });
+    
+    const url = `${ITUNES_SEARCH_BASE_URL}?${searchParams.toString()}`;
+    const response = await fetchFromItunes(url);
+    
+    if (!response.results || response.results.length === 0) {
+      return null;
+    }
+    
+    const appData = response.results[0];
+    
+    // Verify the bundle ID matches exactly
+    if (appData.bundleId !== bundleId) {
+      return null;
+    }
+    
+    return formatAppStoreInfo(appData);
+  } catch (error) {
+    console.warn(`Failed to search app by bundle ID "${bundleId}":`, error.message);
+    return null;
+  }
 }
 
 /**
