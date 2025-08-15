@@ -3,7 +3,9 @@ import type { AppsData } from "../types/app";
 import { promises as fs } from "fs";
 import path from "path";
 import LastUpdated from "../components/LastUpdated.astro";
+import PlatformBadge from "../components/PlatformBadge.svelte";
 import ProgressBar from "../components/ProgressBar.svelte";
+import PRStateLabel from "../components/PRStateLabel.svelte";
 
 let appsData: AppsData | null = null;
 let error: string | null = null;
@@ -60,9 +62,7 @@ try {
                     <h2 style="margin: 0;">{app.name}</h2>
                     <p style="margin: 0; color: #666;">{app.repository}</p>
                     <p style="margin: 0;">
-                      <span style="background-color: #e0e0e0; padding: 2px 8px; border-radius: 4px; font-size: 0.9em;">
-                        {app.platform}
-                      </span>
+                      <PlatformBadge platform={app.platform} />
                     </p>
                   </div>
                 </div>
@@ -78,6 +78,22 @@ try {
                 )}
                 
                 <ProgressBar milestone={app.milestone} client:load />
+
+                {app.recentPRs && app.recentPRs.length > 0 && (
+                  <div style="margin-top: 15px;">
+                    <strong>📝 Recent Pull Requests</strong>
+                    <ul style="margin-top: 8px; padding: 0;">
+                      {app.recentPRs.slice(0, 3).map((pr) => (
+                        <PRStateLabel 
+                          client:load
+                          state={pr.state}
+                          prNumber={pr.number}
+                          title={pr.title}
+                        />
+                      ))}
+                    </ul>
+                  </div>
+                )}
                 
                 <div style="margin-top: 10px;">
                   <a href={app.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>
