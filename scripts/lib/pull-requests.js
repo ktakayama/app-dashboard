@@ -107,7 +107,7 @@ export function normalizePRState(pr) {
     number: pr.number,
     title: pr.title,
     url: pr.url,
-    state: pr.state,
+    state: pr.state.toLowerCase(),
     mergedAt: pr.mergedAt || null,
   };
 }
