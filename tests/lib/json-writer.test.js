@@ -260,7 +260,6 @@ describe('JSON Writer Module', () => {
       fs.access.mockRejectedValue({ code: 'ENOENT' });
       fs.writeFile.mockResolvedValue();
       fs.rename.mockResolvedValue();
-      fs.readFile.mockResolvedValue('dummy'); // Not used in this test
       fs.stat.mockResolvedValue({ size: 1024 });
 
       // Capture the JSON data written to file
@@ -269,6 +268,9 @@ describe('JSON Writer Module', () => {
         writtenJson = data;
         return Promise.resolve();
       });
+
+      // Mock readFile to return the same data that was written
+      fs.readFile.mockImplementation(() => Promise.resolve(writtenJson));
 
       await writeAppsJson(mockAppsData, 'test-output.json', mockLogger);
 
