@@ -110,3 +110,35 @@ bun add astro @astrojs/svelte @astrojs/tailwind
 3. **データ更新** - `bun run update`でデータ取得
 4. **ダッシュボード起動** - `bun run dev`でローカルサーバー開始
 5. **本番ビルド** - `bun run build`で静的ファイル生成
+
+## CLIオプション
+
+データ更新コマンド（`bun run update`）には以下のオプションが利用できます：
+
+### 基本的なオプション
+
+```bash
+# 通常の実行
+bun run update
+
+# 詳細ログ付きで実行
+bun run update --verbose
+
+# カスタム設定ファイルを使用
+bun run update --config custom-config.json
+
+# ドライラン（ファイル保存なし）
+bun run update --dry-run
+
+# 複数オプションの組み合わせ
+bun run update --verbose --dry-run --config test-config.json
+```
+
+### オプション詳細
+
+| オプション            | 短縮形 | 説明                                               |
+| --------------------- | ------ | -------------------------------------------------- |
+| `--verbose`           | `-v`   | 詳細なログ出力（デバッグ情報、API呼び出し詳細）    |
+| `--config <path>`     | `-c`   | 設定ファイルパス指定（デフォルト: config.json）    |
+| `--dry-run`           | なし   | テスト実行（JSONファイル書き込みをスキップ）       |
+| `--help`              | `-h`   | ヘルプメッセージ表示                               |
