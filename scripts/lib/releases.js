@@ -2,7 +2,7 @@
  * GitHub release information utilities
  */
 
-import { executeGH, ghAPI } from './github-cli.js';
+import { ghAPI } from './github-cli.js';
 
 /**
  * Get latest release information
@@ -12,26 +12,20 @@ import { executeGH, ghAPI } from './github-cli.js';
  */
 export async function getLatestRelease(owner, repo) {
   try {
-    const args = [
-      'release',
-      'view',
-      'latest',
-      '--repo',
-      `${owner}/${repo}`,
-      '--json',
-      'tagName,publishedAt,url,isPrerelease',
-    ];
-
-    const output = await executeGH(args);
-    const releaseData = JSON.parse(output);
+    const releaseData = await ghAPI(`repos/${owner}/${repo}/releases/latest`);
 
     // Skip prerelease versions
-    if (releaseData.isPrerelease) {
+    if (releaseData.prerelease) {
       return null;
     }
 
-    return formatReleaseData(releaseData);
-  } catch (error) {
+    return formatReleaseData({
+      tagName: releaseData.tag_name,
+      publishedAt: releaseData.published_at,
+      url: releaseData.html_url,
+      isPrerelease: releaseData.prerelease,
+    });
+  } catch {
     // No releases found or other error
     return null;
   }
@@ -46,25 +40,22 @@ export async function getLatestRelease(owner, repo) {
  */
 export async function getReleases(owner, repo, limit = 5) {
   try {
-    const args = [
-      'release',
-      'list',
-      '--repo',
-      `${owner}/${repo}`,
-      '--limit',
-      limit.toString(),
-      '--json',
-      'tagName,publishedAt,url,isPrerelease',
-    ];
-
-    const output = await executeGH(args);
-    const releases = JSON.parse(output);
+    const releases = await ghAPI(
+      `repos/${owner}/${repo}/releases?per_page=${limit}`
+    );
 
     // Filter out prereleases and format data
     return releases
-      .filter((release) => !release.isPrerelease)
-      .map((release) => formatReleaseData(release));
-  } catch (error) {
+      .filter((release) => !release.prerelease)
+      .map((release) =>
+        formatReleaseData({
+          tagName: release.tag_name,
+          publishedAt: release.published_at,
+          url: release.html_url,
+          isPrerelease: release.prerelease,
+        })
+      );
+  } catch {
     // No releases found or other error
     return [];
   }
@@ -88,7 +79,7 @@ export async function getLatestTag(owner, repo) {
     const latestTag = tagsData[0];
 
     return formatTagData(latestTag, owner, repo);
-  } catch (error) {
+  } catch {
     // No tags found or other error
     return null;
   }
