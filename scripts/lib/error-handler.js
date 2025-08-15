@@ -40,4 +40,3 @@ export function setupGlobalErrorHandlers(logger) {
     process.exit(1);
   });
 }
-

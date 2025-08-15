@@ -88,4 +88,3 @@ try {
 } catch (error) {
   handleError(error, logger);
 }
-
