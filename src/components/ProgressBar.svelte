@@ -5,55 +5,24 @@
 </script>
 
 {#if milestone}
-  <div class="milestone-section">
-    <div class="milestone-title">🎯 Milestone: {milestone.title}</div>
-    <div class="progress-bar">
+  <div class="mb-4">
+    <div class="text-sm font-semibold mb-2">🎯 Milestone: {milestone.title}</div>
+    <div class="bg-gray-200 h-2 rounded overflow-hidden">
       <div 
-        class="progress-fill" 
+        class="bg-success-500 h-full transition-all duration-300 ease-in-out" 
         style="width: {milestone.progress}%"
       ></div>
     </div>
-    <div class="progress-text">
+    <div class="text-xs text-gray-500 mt-1">
       {milestone.closedIssues} closed / {milestone.totalIssues} total issues ({milestone.progress}%)
     </div>
   </div>
 {:else}
-  <div class="milestone-section">
-    <div class="milestone-title">🎯 Milestone: No active milestone</div>
-    <div class="progress-bar">
-      <div class="progress-fill" style="width: 0%"></div>
+  <div class="mb-4">
+    <div class="text-sm font-semibold mb-2">🎯 Milestone: No active milestone</div>
+    <div class="bg-gray-200 h-2 rounded overflow-hidden">
+      <div class="bg-success-500 h-full transition-all duration-300 ease-in-out" style="width: 0%"></div>
     </div>
-    <div class="progress-text">No milestone set</div>
+    <div class="text-xs text-gray-500 mt-1">No milestone set</div>
   </div>
 {/if}
-
-<style>
-  .milestone-section {
-    margin-bottom: 15px;
-  }
-
-  .milestone-title {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-
-  .progress-bar {
-    background: #e4e6ea;
-    height: 8px;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    background: #00875a;
-    height: 100%;
-    transition: width 0.3s ease;
-  }
-
-  .progress-text {
-    font-size: 12px;
-    color: #6b778c;
-    margin-top: 5px;
-  }
-</style>
