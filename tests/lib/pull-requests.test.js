@@ -35,7 +35,7 @@ describe('Pull Request Information Module', () => {
         number: 123,
         title: 'Add new feature',
         url: 'https://github.com/owner/repo/pull/123',
-        state: 'MERGED',
+        state: 'merged',
         mergedAt: '2025-01-15T10:30:00Z',
         closedAt: null,
         updatedAt: '2025-01-15T10:30:00Z',
@@ -47,7 +47,7 @@ describe('Pull Request Information Module', () => {
         number: 123,
         title: 'Add new feature',
         url: 'https://github.com/owner/repo/pull/123',
-        state: 'MERGED',
+        state: 'merged',
         mergedAt: '2025-01-15T10:30:00Z',
       });
     });
@@ -57,7 +57,7 @@ describe('Pull Request Information Module', () => {
         number: 456,
         title: 'Fix bug',
         url: 'https://github.com/owner/repo/pull/456',
-        state: 'OPEN',
+        state: 'open',
         mergedAt: null,
         closedAt: null,
         updatedAt: '2025-01-14T15:20:00Z',
@@ -69,7 +69,7 @@ describe('Pull Request Information Module', () => {
         number: 456,
         title: 'Fix bug',
         url: 'https://github.com/owner/repo/pull/456',
-        state: 'OPEN',
+        state: 'open',
         mergedAt: null,
       });
     });
@@ -219,7 +219,7 @@ describe('Pull Request Information Module', () => {
         number: 100,
         title: 'Feature A',
         url: 'https://github.com/test/repo/pull/100',
-        state: 'OPEN',
+        state: 'open',
         mergedAt: null,
       });
     });
@@ -237,7 +237,7 @@ describe('Pull Request Information Module', () => {
         number: i + 1,
         title: `PR ${i + 1}`,
         url: `https://github.com/test/repo/pull/${i + 1}`,
-        state: 'MERGED',
+        state: 'merged',
         mergedAt: `2025-01-${10 + i}T10:00:00Z`,
         closedAt: `2025-01-${10 + i}T10:00:00Z`,
         updatedAt: `2025-01-${10 + i}T10:00:00Z`,
