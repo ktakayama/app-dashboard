@@ -2,13 +2,23 @@
  * Test for Play Store API integration
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   searchAppById,
   formatPlayStoreInfo,
 } from '../../scripts/lib/play-store.js';
 
+// Mock the google-play-scraper module
+vi.mock('google-play-scraper', () => ({
+  default: {
+    app: vi.fn(),
+  },
+}));
+
 describe('Play Store API', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
   it('should format play store data correctly', () => {
     const mockData = {
       url: 'https://play.google.com/store/apps/details?id=com.example.app',
@@ -36,25 +46,42 @@ describe('Play Store API', () => {
     });
   });
 
-  it('should search real app by package ID', async () => {
-    // Test with the provided URL package ID
-    const packageId = 'org.aill.tadoku_log';
+  it('should search app by package ID successfully', async () => {
+    const packageId = 'com.example.app';
+    const mockAppData = {
+      url: 'https://play.google.com/store/apps/details?id=com.example.app',
+      version: '1.2.3',
+      appId: 'com.example.app',
+    };
+
+    // Import the mock after the module is mocked
+    const gplay = await import('google-play-scraper');
+    gplay.default.app.mockResolvedValue(mockAppData);
 
     const result = await searchAppById(packageId);
 
-    expect(result).toBeTruthy();
-    expect(result.packageId).toBe(packageId);
-    expect(result.version).toBeTruthy();
-    expect(result.playStoreUrl).toContain('play.google.com');
-  }, 10000); // 10 second timeout for API call
+    expect(gplay.default.app).toHaveBeenCalledWith({
+      appId: packageId,
+      lang: 'ja',
+      country: 'jp',
+    });
+    expect(result).toEqual({
+      playStoreUrl: mockAppData.url,
+      version: mockAppData.version,
+      packageId: mockAppData.appId,
+    });
+  });
 
-  it('should return null for invalid package ID', async () => {
-    const result = await searchAppById(
-      'invalid.package.id.that.does.not.exist'
-    );
+  it('should return null when API throws error', async () => {
+    const packageId = 'invalid.package.id';
+
+    const gplay = await import('google-play-scraper');
+    gplay.default.app.mockRejectedValue(new Error('App not found (404)'));
+
+    const result = await searchAppById(packageId);
 
     expect(result).toBeNull();
-  }, 10000);
+  });
 
   it('should return null for empty package ID', async () => {
     const result = await searchAppById('');
