@@ -76,12 +76,12 @@
       GitHub
     </a>
     {#if app.links.appStore}
-      <a href={app.links.appStore} class="flex-1 py-2.5 px-4 text-center no-underline rounded-md text-sm font-medium transition-all duration-200 bg-gray-100 text-gray-900 border border-gray-300 hover:bg-gray-200 hover:border-gray-400" target="_blank" rel="noopener">
+      <a href={app.links.appStore} class="flex-1 py-2.5 px-4 text-center no-underline rounded-md text-sm font-medium transition-all duration-200 border bg-gray-100 text-gray-900 border-gray-300 hover:bg-gray-200 hover:border-gray-400" target="_blank" rel="noopener">
         App Store
       </a>
     {/if}
     {#if app.links.playStore}
-      <a href={app.links.playStore} class="flex-1 py-2.5 px-4 text-center no-underline rounded-md text-sm font-medium transition-all duration-200 bg-gray-100 text-gray-900 border border-gray-300 hover:bg-gray-200 hover:border-gray-400" target="_blank" rel="noopener">
+      <a href={app.links.playStore} class="flex-1 py-2.5 px-4 text-center no-underline rounded-md text-sm font-medium transition-all duration-200 border bg-gray-100 text-gray-900 border-gray-300 hover:bg-gray-200 hover:border-gray-400" target="_blank" rel="noopener">
         Play Store
       </a>
     {/if}
