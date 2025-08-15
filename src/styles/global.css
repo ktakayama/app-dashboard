@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+    background-color: theme('colors.gray.50');
+    color: theme('colors.gray.900');
+    padding: 1.25rem; /* 20px */
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    color: theme('colors.gray.900');
+  }
+
+  h1 {
+    font-size: 1.5rem; /* 24px */
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  button {
+    font-family: inherit;
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .app-card {
+    @apply bg-white rounded-card p-5 shadow-card;
+  }
+
+  .app-header {
+    @apply flex items-center mb-5;
+  }
+
+  .app-icon {
+    @apply w-16 h-16 rounded-icon mr-4 bg-gray-300;
+  }
+
+  .app-name {
+    @apply text-lg font-semibold mb-1;
+  }
+
+  .platform-badge {
+    @apply inline-block py-0.5 px-2 bg-blue-50 text-blue-600 rounded text-xs;
+  }
+
+  .version-section {
+    @apply mb-4 p-2.5 bg-gray-100 rounded-md;
+  }
+
+  .version-row {
+    @apply flex justify-between mb-1 text-sm;
+  }
+
+  .version-label {
+    @apply text-gray-500;
+  }
+
+  .store-versions {
+    @apply flex gap-4 text-xs;
+  }
+
+  .milestone-section {
+    @apply mb-4;
+  }
+
+  .milestone-title {
+    @apply text-sm font-semibold mb-2;
+  }
+
+  .progress-bar {
+    @apply bg-gray-200 h-2 rounded overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply bg-success-500 h-full transition-all duration-300;
+  }
+
+  .progress-text {
+    @apply text-xs text-gray-500 mt-1;
+  }
+
+  .pr-section {
+    @apply mb-4;
+  }
+
+  .pr-title {
+    @apply text-sm font-semibold mb-2;
+  }
+
+  .pr-list {
+    @apply list-none;
+  }
+
+  .pr-item {
+    @apply py-2 px-2 bg-gray-100 rounded mb-1 text-xs;
+  }
+
+  .pr-state {
+    @apply inline-block py-0.5 px-1.5 rounded-sm text-xs mr-2;
+  }
+
+  .pr-state.open {
+    @apply bg-success-500 text-white;
+  }
+
+  .pr-state.merged {
+    @apply bg-purple-500 text-white;
+  }
+
+  .pr-state.closed {
+    @apply bg-error-500 text-white;
+  }
+
+  .links-section {
+    @apply flex gap-2.5;
+  }
+
+  .link-button {
+    @apply flex-1 py-2 text-center bg-primary-600 text-white rounded text-sm hover:bg-primary-700 transition-colors;
+  }
+
+  .link-button.secondary {
+    @apply bg-gray-100 text-gray-900 hover:bg-gray-200;
+  }
+
+  .header {
+    @apply bg-white p-5 mb-5 rounded-card shadow-card;
+  }
+
+  .apps-grid {
+    @apply grid grid-cols-auto-fill-380 gap-5;
+  }
+
+  .last-updated {
+    @apply text-gray-500 text-sm;
+  }
+}

@@ -4,6 +4,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import LastUpdated from "../components/LastUpdated.astro";
 import AppCard from "../components/AppCard.svelte";
+import "../styles/global.css";
 
 let appsData: AppsData | null = null;
 let error: string | null = null;
@@ -35,27 +36,25 @@ try {
   </head>
   <body>
     <main>
-      <header style="margin-bottom: 30px; padding: 20px; background-color: #fafafa; border-radius: 8px;">
-        <h1 style="margin: 0 0 10px 0;">App Dashboard</h1>
+      <header class="header">
+        <h1>🚀 App Development Dashboard</h1>
         {appsData && (
-          <div style="display: flex; align-items: center; gap: 20px; margin-top: 10px;">
+          <div class="flex items-center gap-5 mt-2">
             <LastUpdated lastUpdated={appsData.lastUpdated} />
-            <span style="color: #666; font-size: 0.9rem;">アプリ数: {appsData.apps.length}</span>
+            <span class="text-gray-600 text-sm">アプリ数: {appsData.apps.length}</span>
           </div>
         )}
       </header>
       
       {error ? (
-        <div style="padding: 20px; background-color: #fee; border: 1px solid #fcc; border-radius: 4px; margin: 20px;">
+        <div class="p-5 bg-error-50 border border-error-200 rounded m-5">
           <strong>エラー:</strong> {error}
         </div>
       ) : appsData ? (
-        <div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-top: 20px;">
-            {appsData.apps.map((app) => (
-              <AppCard app={app} client:load />
-            ))}
-          </div>
+        <div class="apps-grid">
+          {appsData.apps.map((app) => (
+            <AppCard app={app} client:load />
+          ))}
         </div>
       ) : (
         <p>データを読み込み中...</p>
