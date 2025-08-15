@@ -13,19 +13,23 @@ import { executeGH, ghAPI } from './github-cli.js';
 export async function getLatestRelease(owner, repo) {
   try {
     const args = [
-      'release', 'view', 'latest',
-      '--repo', `${owner}/${repo}`,
-      '--json', 'tagName,publishedAt,url,isPrerelease'
+      'release',
+      'view',
+      'latest',
+      '--repo',
+      `${owner}/${repo}`,
+      '--json',
+      'tagName,publishedAt,url,isPrerelease',
     ];
-    
+
     const output = await executeGH(args);
     const releaseData = JSON.parse(output);
-    
+
     // Skip prerelease versions
     if (releaseData.isPrerelease) {
       return null;
     }
-    
+
     return formatReleaseData(releaseData);
   } catch (error) {
     // No releases found or other error
@@ -43,19 +47,23 @@ export async function getLatestRelease(owner, repo) {
 export async function getReleases(owner, repo, limit = 5) {
   try {
     const args = [
-      'release', 'list',
-      '--repo', `${owner}/${repo}`,
-      '--limit', limit.toString(),
-      '--json', 'tagName,publishedAt,url,isPrerelease'
+      'release',
+      'list',
+      '--repo',
+      `${owner}/${repo}`,
+      '--limit',
+      limit.toString(),
+      '--json',
+      'tagName,publishedAt,url,isPrerelease',
     ];
-    
+
     const output = await executeGH(args);
     const releases = JSON.parse(output);
-    
+
     // Filter out prereleases and format data
     return releases
-      .filter(release => !release.isPrerelease)
-      .map(release => formatReleaseData(release));
+      .filter((release) => !release.isPrerelease)
+      .map((release) => formatReleaseData(release));
   } catch (error) {
     // No releases found or other error
     return [];
@@ -71,14 +79,14 @@ export async function getReleases(owner, repo, limit = 5) {
 export async function getLatestTag(owner, repo) {
   try {
     const tagsData = await ghAPI(`repos/${owner}/${repo}/tags`);
-    
+
     if (!tagsData || tagsData.length === 0) {
       return null;
     }
-    
+
     // Get the first (most recent) tag
     const latestTag = tagsData[0];
-    
+
     return formatTagData(latestTag, owner, repo);
   } catch (error) {
     // No tags found or other error
@@ -95,7 +103,7 @@ export function formatReleaseData(releaseData) {
   return {
     version: releaseData.tagName,
     date: formatDate(releaseData.publishedAt),
-    url: releaseData.url
+    url: releaseData.url,
   };
 }
 
@@ -110,7 +118,7 @@ export function formatTagData(tagData, owner, repo) {
   return {
     version: tagData.name,
     date: null, // Tags don't have publish dates in the API response
-    url: `https://github.com/${owner}/${repo}/releases/tag/${tagData.name}`
+    url: `https://github.com/${owner}/${repo}/releases/tag/${tagData.name}`,
   };
 }
 

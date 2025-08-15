@@ -3,12 +3,18 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getLatestRelease, getReleases, getLatestTag, formatReleaseData, formatTagData } from '../../scripts/lib/releases.js';
+import {
+  getLatestRelease,
+  getReleases,
+  getLatestTag,
+  formatReleaseData,
+  formatTagData,
+} from '../../scripts/lib/releases.js';
 
 // Mock the github-cli module
 vi.mock('../../scripts/lib/github-cli.js', () => ({
   executeGH: vi.fn(),
-  ghAPI: vi.fn()
+  ghAPI: vi.fn(),
 }));
 
 import { executeGH, ghAPI } from '../../scripts/lib/github-cli.js';
@@ -33,7 +39,7 @@ describe('Release Information Module', () => {
       const mockReleaseData = {
         tagName: 'v1.2.3',
         publishedAt: '2025-01-15T10:30:00Z',
-        url: 'https://github.com/owner/repo/releases/tag/v1.2.3'
+        url: 'https://github.com/owner/repo/releases/tag/v1.2.3',
       };
 
       const result = formatReleaseData(mockReleaseData);
@@ -41,7 +47,7 @@ describe('Release Information Module', () => {
       expect(result).toEqual({
         version: 'v1.2.3',
         date: '2025-01-15',
-        url: 'https://github.com/owner/repo/releases/tag/v1.2.3'
+        url: 'https://github.com/owner/repo/releases/tag/v1.2.3',
       });
     });
 
@@ -49,7 +55,7 @@ describe('Release Information Module', () => {
       const mockReleaseData = {
         tagName: 'v1.0.0',
         publishedAt: null,
-        url: 'https://github.com/owner/repo/releases/tag/v1.0.0'
+        url: 'https://github.com/owner/repo/releases/tag/v1.0.0',
       };
 
       const result = formatReleaseData(mockReleaseData);
@@ -57,7 +63,7 @@ describe('Release Information Module', () => {
       expect(result).toEqual({
         version: 'v1.0.0',
         date: null,
-        url: 'https://github.com/owner/repo/releases/tag/v1.0.0'
+        url: 'https://github.com/owner/repo/releases/tag/v1.0.0',
       });
     });
   });
@@ -65,7 +71,7 @@ describe('Release Information Module', () => {
   describe('formatTagData', () => {
     it('should format tag data correctly', () => {
       const mockTagData = {
-        name: 'v2.0.0'
+        name: 'v2.0.0',
       };
 
       const result = formatTagData(mockTagData, 'owner', 'repo');
@@ -73,7 +79,7 @@ describe('Release Information Module', () => {
       expect(result).toEqual({
         version: 'v2.0.0',
         date: null,
-        url: 'https://github.com/owner/repo/releases/tag/v2.0.0'
+        url: 'https://github.com/owner/repo/releases/tag/v2.0.0',
       });
     });
   });
@@ -84,7 +90,7 @@ describe('Release Information Module', () => {
         tagName: 'v1.5.0',
         publishedAt: '2025-01-10T14:20:00Z',
         url: 'https://github.com/test/repo/releases/tag/v1.5.0',
-        isPrerelease: false
+        isPrerelease: false,
       });
 
       executeGH.mockResolvedValue(mockGHOutput);
@@ -92,15 +98,19 @@ describe('Release Information Module', () => {
       const result = await getLatestRelease('test', 'repo');
 
       expect(executeGH).toHaveBeenCalledWith([
-        'release', 'view', 'latest',
-        '--repo', 'test/repo',
-        '--json', 'tagName,publishedAt,url,isPrerelease'
+        'release',
+        'view',
+        'latest',
+        '--repo',
+        'test/repo',
+        '--json',
+        'tagName,publishedAt,url,isPrerelease',
       ]);
 
       expect(result).toEqual({
         version: 'v1.5.0',
         date: '2025-01-10',
-        url: 'https://github.com/test/repo/releases/tag/v1.5.0'
+        url: 'https://github.com/test/repo/releases/tag/v1.5.0',
       });
     });
 
@@ -109,7 +119,7 @@ describe('Release Information Module', () => {
         tagName: 'v2.0.0-beta.1',
         publishedAt: '2025-01-12T09:15:00Z',
         url: 'https://github.com/test/repo/releases/tag/v2.0.0-beta.1',
-        isPrerelease: true
+        isPrerelease: true,
       });
 
       executeGH.mockResolvedValue(mockGHOutput);
@@ -135,20 +145,20 @@ describe('Release Information Module', () => {
           tagName: 'v1.3.0',
           publishedAt: '2025-01-08T11:45:00Z',
           url: 'https://github.com/test/repo/releases/tag/v1.3.0',
-          isPrerelease: false
+          isPrerelease: false,
         },
         {
           tagName: 'v1.3.0-rc.1',
           publishedAt: '2025-01-05T16:30:00Z',
           url: 'https://github.com/test/repo/releases/tag/v1.3.0-rc.1',
-          isPrerelease: true
+          isPrerelease: true,
         },
         {
           tagName: 'v1.2.0',
           publishedAt: '2024-12-20T08:00:00Z',
           url: 'https://github.com/test/repo/releases/tag/v1.2.0',
-          isPrerelease: false
-        }
+          isPrerelease: false,
+        },
       ]);
 
       executeGH.mockResolvedValue(mockGHOutput);
@@ -156,22 +166,26 @@ describe('Release Information Module', () => {
       const result = await getReleases('test', 'repo', 3);
 
       expect(executeGH).toHaveBeenCalledWith([
-        'release', 'list',
-        '--repo', 'test/repo',
-        '--limit', '3',
-        '--json', 'tagName,publishedAt,url,isPrerelease'
+        'release',
+        'list',
+        '--repo',
+        'test/repo',
+        '--limit',
+        '3',
+        '--json',
+        'tagName,publishedAt,url,isPrerelease',
       ]);
 
       expect(result).toHaveLength(2);
       expect(result[0]).toEqual({
         version: 'v1.3.0',
         date: '2025-01-08',
-        url: 'https://github.com/test/repo/releases/tag/v1.3.0'
+        url: 'https://github.com/test/repo/releases/tag/v1.3.0',
       });
       expect(result[1]).toEqual({
         version: 'v1.2.0',
         date: '2024-12-20',
-        url: 'https://github.com/test/repo/releases/tag/v1.2.0'
+        url: 'https://github.com/test/repo/releases/tag/v1.2.0',
       });
     });
 
@@ -189,12 +203,12 @@ describe('Release Information Module', () => {
       const mockTagsData = [
         {
           name: 'v1.4.0',
-          commit: { sha: 'abc123' }
+          commit: { sha: 'abc123' },
         },
         {
           name: 'v1.3.0',
-          commit: { sha: 'def456' }
-        }
+          commit: { sha: 'def456' },
+        },
       ];
 
       ghAPI.mockResolvedValue(mockTagsData);
@@ -206,7 +220,7 @@ describe('Release Information Module', () => {
       expect(result).toEqual({
         version: 'v1.4.0',
         date: null,
-        url: 'https://github.com/test/repo/releases/tag/v1.4.0'
+        url: 'https://github.com/test/repo/releases/tag/v1.4.0',
       });
     });
 
