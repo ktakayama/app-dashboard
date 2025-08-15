@@ -72,6 +72,7 @@ export function formatAppStoreInfo(itunesData) {
       appStoreUrl: null,
       version: null,
       iconUrl: null,
+      minimumOsVersion: null,
     };
   }
 
@@ -79,6 +80,7 @@ export function formatAppStoreInfo(itunesData) {
     appStoreUrl: itunesData.trackViewUrl || null,
     version: itunesData.version || null,
     iconUrl: getHighResolutionIconUrl(itunesData),
+    minimumOsVersion: itunesData.minimumOsVersion || null,
   };
 }
 

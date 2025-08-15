@@ -55,6 +55,7 @@ describe('iTunes Lookup API Module', () => {
         appStoreUrl: 'https://apps.apple.com/app/id6446930619',
         version: '1.13.1',
         iconUrl: 'https://example.com/icon512.png',
+        minimumOsVersion: null,
       });
     });
 
@@ -76,6 +77,7 @@ describe('iTunes Lookup API Module', () => {
         appStoreUrl: 'https://apps.apple.com/app/id6446930619',
         version: '1.13.1',
         iconUrl: 'https://example.com/icon512.png',
+        minimumOsVersion: null,
       });
     });
   });
@@ -90,30 +92,35 @@ describe('iTunes Lookup API Module', () => {
         appStoreUrl: null,
         version: null,
         iconUrl: null,
+        minimumOsVersion: null,
       });
 
       expect(formatAppStoreInfo(undefined)).toEqual({
         appStoreUrl: null,
         version: null,
         iconUrl: null,
+        minimumOsVersion: null,
       });
 
       expect(formatAppStoreInfo({})).toEqual({
         appStoreUrl: null,
         version: null,
         iconUrl: null,
+        minimumOsVersion: null,
       });
     });
 
-    it('should extract app store URL and version', () => {
+    it('should extract app store URL, version and minimumOsVersion', () => {
       const mockData = {
         trackViewUrl: 'https://apps.apple.com/app/id123',
         version: '1.5.0',
+        minimumOsVersion: '16.4',
       };
 
       const result = formatAppStoreInfo(mockData);
       expect(result.appStoreUrl).toBe('https://apps.apple.com/app/id123');
       expect(result.version).toBe('1.5.0');
+      expect(result.minimumOsVersion).toBe('16.4');
     });
 
     it('should prioritize artworkUrl512 for icon', () => {

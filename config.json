@@ -4,9 +4,9 @@
       "owner": "example",
       "repo": "sample-app",
       "appName": "Sample Application",
-      "platforms": ["ios", "android"]
+      "platforms": ["ios", "android"],
+      "appStoreId": "123456789"
     }
   ],
-  "outputPath": "src/data/apps.json",
-  "itunesSearchUrl": "https://itunes.apple.com/search"
+  "outputPath": "src/data/apps.json"
 }
