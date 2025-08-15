@@ -56,13 +56,13 @@ bun add astro @astrojs/svelte @astrojs/tailwind
       "appName": "Flutter App",
       "platforms": ["ios", "android"],
       "appStoreId": "123456789",
-      "packageId": "com.username.flutterapp"
+      "playStoreId": "com.username.flutterapp"
     },
     {
       "repository": "username/android-app",
       "appName": "Android Application",
       "platforms": ["android"],
-      "packageId": "com.username.androidapp"
+      "playStoreId": "com.username.androidapp"
     }
   ],
   "outputPath": "src/data/apps.json"

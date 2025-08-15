@@ -1,11 +1,11 @@
 {
   "repositories": [
     {
-      "repository": "ktakayama/app-dashboard",
+      "repository": "ktakayama/TadokuLog",
       "appName": "App DashBoard",
       "platforms": ["ios", "android"],
-      "appStoreId": "123456789",
-      "packageId": "com.example.app"
+      "appStoreId": "6446930619",
+      "playStoreId": "org.aill.tadoku_log"
     }
   ],
   "outputPath": "src/data/apps.json"
