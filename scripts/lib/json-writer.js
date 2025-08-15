@@ -75,7 +75,7 @@ function formatAppsJson(appsData) {
     totalApps: appsData.length,
   };
 
-  return JSON.stringify(jsonStructure, null, 2);
+  return JSON.stringify(jsonStructure, null, 2) + '\n';
 }
 
 /**
