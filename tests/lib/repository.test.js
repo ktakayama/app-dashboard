@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getRepositoryInfo, getAppName } from '../../scripts/lib/repository.js';
+import { getRepositoryInfo } from '../../scripts/lib/repository.js';
 
 vi.mock('../../scripts/lib/github-cli.js', () => ({
   ghAPI: vi.fn(),
@@ -96,38 +96,6 @@ describe('Repository Module', () => {
       await expect(getRepositoryInfo('owner', 'test-repo')).rejects.toThrow(
         'Failed to access repository owner/test-repo'
       );
-    });
-  });
-
-  describe('getAppName', () => {
-    it('should return app name from config', () => {
-      const result = getAppName('My Application', 'fallback');
-      expect(result).toBe('My Application');
-    });
-
-    it('should use fallback when app name is not provided', () => {
-      const result = getAppName('', 'fallback');
-      expect(result).toBe('fallback');
-    });
-
-    it('should use fallback when app name is null', () => {
-      const result = getAppName(null, 'fallback');
-      expect(result).toBe('fallback');
-    });
-
-    it('should use fallback when app name is whitespace only', () => {
-      const result = getAppName('   ', 'fallback');
-      expect(result).toBe('fallback');
-    });
-
-    it('should return unknown when no app name and no fallback', () => {
-      const result = getAppName('', '');
-      expect(result).toBe('unknown');
-    });
-
-    it('should return unknown when both are null', () => {
-      const result = getAppName(null, null);
-      expect(result).toBe('unknown');
     });
   });
 });

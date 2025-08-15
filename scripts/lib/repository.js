@@ -46,16 +46,3 @@ export async function getRepositoryInfo(owner, repo) {
     throw error;
   }
 }
-
-/**
- * Get app name from config
- * @param {string} appName - App name from config.json
- * @param {string} fallbackName - Fallback name if app name is not provided
- * @returns {string} App name
- */
-export function getAppName(appName, fallbackName) {
-  if (!appName || appName.trim() === '') {
-    return fallbackName || 'unknown';
-  }
-  return appName;
-}
