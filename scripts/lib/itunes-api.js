@@ -124,10 +124,45 @@ export async function searchAppByName(appName, developerName) {
  * @returns {object} Formatted app store information
  */
 export function formatAppStoreInfo(itunesData) {
-  // TODO: Implement data formatting
+  if (!itunesData || typeof itunesData !== 'object') {
+    return {
+      appStoreUrl: null,
+      version: null,
+      iconUrl: null
+    };
+  }
+
   return {
-    appStoreUrl: null,
-    version: null,
-    iconUrl: null
+    appStoreUrl: itunesData.trackViewUrl || null,
+    version: itunesData.version || null,
+    iconUrl: getHighResolutionIconUrl(itunesData)
   };
+}
+
+/**
+ * Extract highest resolution app icon URL from iTunes data
+ * @param {object} itunesData - Raw iTunes API response data
+ * @returns {string|null} High resolution icon URL or null if not available
+ */
+function getHighResolutionIconUrl(itunesData) {
+  if (!itunesData) {
+    return null;
+  }
+
+  // Priority order: artworkUrl512 > artworkUrl100 > artworkUrl60
+  if (itunesData.artworkUrl512) {
+    return itunesData.artworkUrl512;
+  }
+  
+  if (itunesData.artworkUrl100) {
+    // Try to get 512x512 version by replacing the size in URL
+    return itunesData.artworkUrl100.replace(/100x100bb/, '512x512bb');
+  }
+  
+  if (itunesData.artworkUrl60) {
+    // Try to get 512x512 version by replacing the size in URL
+    return itunesData.artworkUrl60.replace(/60x60bb/, '512x512bb');
+  }
+  
+  return null;
 }
