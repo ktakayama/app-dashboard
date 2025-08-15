@@ -121,7 +121,7 @@ describe('iTunes Search API Module', () => {
       expect(result).toEqual({
         appStoreUrl: 'https://apps.apple.com/app/id456',
         version: '2.0.0',
-        iconUrl: 'https://example.com/icon512.png',
+        iconUrl: 'https://example.com/icon100.png',
       });
     });
 
