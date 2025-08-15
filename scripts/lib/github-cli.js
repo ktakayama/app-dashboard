@@ -13,8 +13,35 @@ import { CLIError } from './error-handler.js';
  * @returns {Promise<string>} Command output
  */
 export async function executeGH(args, options = {}) {
-  // TODO: Implement basic gh command execution
-  throw new Error('Not implemented');
+  return new Promise((resolve, reject) => {
+    const child = spawn('gh', args, {
+      stdio: ['pipe', 'pipe', 'pipe'],
+      ...options
+    });
+
+    let stdout = '';
+    let stderr = '';
+
+    child.stdout.on('data', (data) => {
+      stdout += data.toString();
+    });
+
+    child.stderr.on('data', (data) => {
+      stderr += data.toString();
+    });
+
+    child.on('close', (code) => {
+      if (code === 0) {
+        resolve(stdout.trim());
+      } else {
+        reject(new CLIError(`gh command failed: ${stderr.trim()}`, code));
+      }
+    });
+
+    child.on('error', (error) => {
+      reject(new CLIError(`Failed to execute gh command: ${error.message}`));
+    });
+  });
 }
 
 /**
@@ -24,8 +51,22 @@ export async function executeGH(args, options = {}) {
  * @returns {Promise<object>} Parsed JSON response
  */
 export async function ghAPI(endpoint, options = {}) {
-  // TODO: Implement API calls
-  throw new Error('Not implemented');
+  const args = ['api', endpoint];
+  
+  // Add common options
+  if (options.method) {
+    args.push('--method', options.method);
+  }
+  
+  try {
+    const output = await executeGH(args, options);
+    return JSON.parse(output);
+  } catch (error) {
+    if (error instanceof CLIError) {
+      throw error;
+    }
+    throw new CLIError(`Failed to parse JSON response: ${error.message}`);
+  }
 }
 
 /**
