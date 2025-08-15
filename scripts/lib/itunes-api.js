@@ -75,8 +75,47 @@ export async function searchAppByBundleId(bundleId) {
  * @returns {Promise<object|null>} App Store information or null if not found
  */
 export async function searchAppByName(appName, developerName) {
-  // TODO: Implement app name search
-  return null;
+  if (!appName || typeof appName !== 'string') {
+    return null;
+  }
+
+  try {
+    const searchParams = new URLSearchParams({
+      term: appName,
+      entity: 'software',
+      country: 'jp',
+      limit: '10'
+    });
+    
+    const url = `${ITUNES_SEARCH_BASE_URL}?${searchParams.toString()}`;
+    const response = await fetchFromItunes(url);
+    
+    if (!response.results || response.results.length === 0) {
+      return null;
+    }
+    
+    // Find best match - prioritize exact app name match
+    let bestMatch = response.results[0];
+    
+    for (const app of response.results) {
+      // Exact app name match (case insensitive)
+      if (app.trackName && app.trackName.toLowerCase() === appName.toLowerCase()) {
+        bestMatch = app;
+        break;
+      }
+      
+      // If developer name provided, prioritize developer match
+      if (developerName && app.artistName && 
+          app.artistName.toLowerCase().includes(developerName.toLowerCase())) {
+        bestMatch = app;
+      }
+    }
+    
+    return formatAppStoreInfo(bestMatch);
+  } catch (error) {
+    console.warn(`Failed to search app by name "${appName}":`, error.message);
+    return null;
+  }
 }
 
 /**
