@@ -168,27 +168,51 @@ describe('Pull Request Information Module', () => {
       const result = await getRecentPullRequests('test', 'repo', 3);
 
       expect(executeGH).toHaveBeenCalledTimes(3);
-      
+
       // Check that all three state calls were made
       expect(executeGH).toHaveBeenNthCalledWith(1, [
-        'pr', 'list', '--repo', 'test/repo', '--state', 'open',
-        '--limit', '5', '--json', 'number,title,url,state,mergedAt,closedAt,updatedAt'
+        'pr',
+        'list',
+        '--repo',
+        'test/repo',
+        '--state',
+        'open',
+        '--limit',
+        '5',
+        '--json',
+        'number,title,url,state,mergedAt,closedAt,updatedAt',
       ]);
       expect(executeGH).toHaveBeenNthCalledWith(2, [
-        'pr', 'list', '--repo', 'test/repo', '--state', 'merged',
-        '--limit', '5', '--json', 'number,title,url,state,mergedAt,closedAt,updatedAt'
+        'pr',
+        'list',
+        '--repo',
+        'test/repo',
+        '--state',
+        'merged',
+        '--limit',
+        '5',
+        '--json',
+        'number,title,url,state,mergedAt,closedAt,updatedAt',
       ]);
       expect(executeGH).toHaveBeenNthCalledWith(3, [
-        'pr', 'list', '--repo', 'test/repo', '--state', 'closed',
-        '--limit', '5', '--json', 'number,title,url,state,mergedAt,closedAt,updatedAt'
+        'pr',
+        'list',
+        '--repo',
+        'test/repo',
+        '--state',
+        'closed',
+        '--limit',
+        '5',
+        '--json',
+        'number,title,url,state,mergedAt,closedAt,updatedAt',
       ]);
 
       expect(result).toHaveLength(3);
-      
+
       // Should be sorted by update time (newest first)
       expect(result[0].number).toBe(100); // Most recent
-      expect(result[1].number).toBe(99);  // Second most recent
-      expect(result[2].number).toBe(98);  // Oldest
+      expect(result[1].number).toBe(99); // Second most recent
+      expect(result[2].number).toBe(98); // Oldest
 
       // Check normalization
       expect(result[0]).toEqual({
