@@ -3,6 +3,7 @@
  */
 
 const ITUNES_SEARCH_BASE_URL = 'https://itunes.apple.com/search';
+const ITUNES_LOOKUP_BASE_URL = 'https://itunes.apple.com/lookup';
 
 /**
  * Make HTTP request to iTunes Search API
@@ -27,6 +28,37 @@ async function fetchFromItunes(url) {
       throw new Error(`Network error accessing iTunes API: ${error.message}`);
     }
     throw error;
+  }
+}
+
+/**
+ * Search app by App Store ID from iTunes Lookup API
+ * @param {string|number} appId - App Store ID (e.g., "6446930619" or 6446930619)
+ * @returns {Promise<object|null>} App Store information or null if not found
+ */
+export async function searchAppById(appId) {
+  if (!appId) {
+    return null;
+  }
+
+  try {
+    const searchParams = new URLSearchParams({
+      id: appId.toString(),
+      country: 'jp',
+    });
+
+    const url = `${ITUNES_LOOKUP_BASE_URL}?${searchParams.toString()}`;
+    const response = await fetchFromItunes(url);
+
+    if (!response.results || response.results.length === 0) {
+      return null;
+    }
+
+    const appData = response.results[0];
+    return formatAppStoreInfo(appData);
+  } catch (error) {
+    console.warn(`Failed to search app by ID "${appId}":`, error.message);
+    return null;
   }
 }
 
@@ -68,62 +100,6 @@ export async function searchAppByBundleId(bundleId) {
       `Failed to search app by bundle ID "${bundleId}":`,
       error.message
     );
-    return null;
-  }
-}
-
-/**
- * Search app by name from iTunes Search API
- * @param {string} appName - App name to search
- * @param {string} developerName - Developer name for better matching
- * @returns {Promise<object|null>} App Store information or null if not found
- */
-export async function searchAppByName(appName, developerName) {
-  if (!appName || typeof appName !== 'string') {
-    return null;
-  }
-
-  try {
-    const searchParams = new URLSearchParams({
-      term: appName,
-      entity: 'software',
-      country: 'jp',
-      limit: '10',
-    });
-
-    const url = `${ITUNES_SEARCH_BASE_URL}?${searchParams.toString()}`;
-    const response = await fetchFromItunes(url);
-
-    if (!response.results || response.results.length === 0) {
-      return null;
-    }
-
-    // Find best match - prioritize exact app name match
-    let bestMatch = response.results[0];
-
-    for (const app of response.results) {
-      // Exact app name match (case insensitive)
-      if (
-        app.trackName &&
-        app.trackName.toLowerCase() === appName.toLowerCase()
-      ) {
-        bestMatch = app;
-        break;
-      }
-
-      // If developer name provided, prioritize developer match
-      if (
-        developerName &&
-        app.artistName &&
-        app.artistName.toLowerCase().includes(developerName.toLowerCase())
-      ) {
-        bestMatch = app;
-      }
-    }
-
-    return formatAppStoreInfo(bestMatch);
-  } catch (error) {
-    console.warn(`Failed to search app by name "${appName}":`, error.message);
     return null;
   }
 }

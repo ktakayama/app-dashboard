@@ -4,8 +4,8 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
+  searchAppById,
   searchAppByBundleId,
-  searchAppByName,
   formatAppStoreInfo,
 } from '../../scripts/lib/itunes-api.js';
 
@@ -81,35 +81,33 @@ describe('iTunes Search API Module', () => {
     });
   });
 
-  describe('searchAppByName', () => {
-    it('should export searchAppByName function', () => {
-      expect(typeof searchAppByName).toBe('function');
+  describe('searchAppById', () => {
+    it('should export searchAppById function', () => {
+      expect(typeof searchAppById).toBe('function');
     });
 
-    it('should return null for invalid app name input', async () => {
-      expect(await searchAppByName('')).toBe(null);
-      expect(await searchAppByName(null)).toBe(null);
-      expect(await searchAppByName(undefined)).toBe(null);
-      expect(await searchAppByName(123)).toBe(null);
+    it('should return null for invalid app ID input', async () => {
+      expect(await searchAppById('')).toBe(null);
+      expect(await searchAppById(null)).toBe(null);
+      expect(await searchAppById(undefined)).toBe(null);
     });
 
-    it('should return null when no apps are found', async () => {
+    it('should return null when app is not found', async () => {
       fetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ results: [] }),
       });
 
-      const result = await searchAppByName('Nonexistent App');
+      const result = await searchAppById('9999999999');
       expect(result).toBe(null);
     });
 
-    it('should return first result when no exact match found', async () => {
+    it('should return formatted app info for valid app ID', async () => {
       const mockAppData = {
-        trackName: 'Similar App',
-        artistName: 'Test Developer',
-        trackViewUrl: 'https://apps.apple.com/app/id456',
-        version: '2.0.0',
-        artworkUrl100: 'https://example.com/icon100.png',
+        trackId: 6446930619,
+        trackViewUrl: 'https://apps.apple.com/app/id6446930619',
+        version: '1.13.1',
+        artworkUrl512: 'https://example.com/icon512.png',
       };
 
       fetch.mockResolvedValueOnce({
@@ -117,42 +115,32 @@ describe('iTunes Search API Module', () => {
         json: () => Promise.resolve({ results: [mockAppData] }),
       });
 
-      const result = await searchAppByName('Test App');
+      const result = await searchAppById('6446930619');
       expect(result).toEqual({
-        appStoreUrl: 'https://apps.apple.com/app/id456',
-        version: '2.0.0',
-        iconUrl: 'https://example.com/icon100.png',
+        appStoreUrl: 'https://apps.apple.com/app/id6446930619',
+        version: '1.13.1',
+        iconUrl: 'https://example.com/icon512.png',
       });
     });
 
-    it('should prioritize exact app name match', async () => {
-      const mockApps = [
-        {
-          trackName: 'Different App',
-          artistName: 'Test Developer',
-          trackViewUrl: 'https://apps.apple.com/app/id456',
-          version: '1.0.0',
-          artworkUrl100: 'https://example.com/icon1.png',
-        },
-        {
-          trackName: 'Test App',
-          artistName: 'Another Developer',
-          trackViewUrl: 'https://apps.apple.com/app/id789',
-          version: '2.0.0',
-          artworkUrl512: 'https://example.com/icon2.png',
-        },
-      ];
+    it('should handle numeric app ID input', async () => {
+      const mockAppData = {
+        trackId: 6446930619,
+        trackViewUrl: 'https://apps.apple.com/app/id6446930619',
+        version: '1.13.1',
+        artworkUrl512: 'https://example.com/icon512.png',
+      };
 
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ results: mockApps }),
+        json: () => Promise.resolve({ results: [mockAppData] }),
       });
 
-      const result = await searchAppByName('Test App');
+      const result = await searchAppById(6446930619);
       expect(result).toEqual({
-        appStoreUrl: 'https://apps.apple.com/app/id789',
-        version: '2.0.0',
-        iconUrl: 'https://example.com/icon2.png',
+        appStoreUrl: 'https://apps.apple.com/app/id6446930619',
+        version: '1.13.1',
+        iconUrl: 'https://example.com/icon512.png',
       });
     });
   });
