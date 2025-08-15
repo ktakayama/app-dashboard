@@ -1,9 +1,8 @@
 {
   "repositories": [
     {
-      "owner": "example",
-      "repo": "sample-app",
-      "appName": "Sample Application",
+      "repository": "ktakayama/app-dashboard",
+      "appName": "App DashBoard",
       "platforms": ["ios", "android"],
       "appStoreId": "123456789",
       "packageId": "com.example.app"

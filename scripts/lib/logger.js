@@ -4,7 +4,7 @@
 
 export class Logger {
   constructor(verbose = false) {
-    this.verbose = verbose;
+    this.isVerbose = verbose;
   }
 
   info(message, ...args) {
@@ -12,7 +12,7 @@ export class Logger {
   }
 
   verbose(message, ...args) {
-    if (this.verbose) {
+    if (this.isVerbose) {
       console.log(`[VERBOSE] ${message}`, ...args);
     }
   }
