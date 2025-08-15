@@ -3,6 +3,7 @@
     {
       "owner": "example",
       "repo": "sample-app",
+      "appName": "Sample Application",
       "platforms": ["ios", "android"]
     }
   ],
