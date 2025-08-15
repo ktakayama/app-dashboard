@@ -3,6 +3,7 @@ import type { AppsData } from "../types/app";
 import { promises as fs } from "fs";
 import path from "path";
 import LastUpdated from "../components/LastUpdated.astro";
+import PlatformBadge from "../components/PlatformBadge.svelte";
 import PRStateLabel from "../components/PRStateLabel.svelte";
 
 let appsData: AppsData | null = null;
@@ -60,9 +61,7 @@ try {
                     <h2 style="margin: 0;">{app.name}</h2>
                     <p style="margin: 0; color: #666;">{app.repository}</p>
                     <p style="margin: 0;">
-                      <span style="background-color: #e0e0e0; padding: 2px 8px; border-radius: 4px; font-size: 0.9em;">
-                        {app.platform}
-                      </span>
+                      <PlatformBadge platform={app.platform} />
                     </p>
                   </div>
                 </div>
