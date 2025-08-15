@@ -14,7 +14,11 @@ import { CLIError } from './error-handler.js';
  * @returns {Promise<void>}
  * @throws {CLIError} If write operation fails
  */
-export async function writeAppsJson(appsData, outputPath = 'src/data/apps.json', logger) {
+export async function writeAppsJson(
+  appsData,
+  outputPath = 'src/data/apps.json',
+  logger
+) {
   if (!Array.isArray(appsData)) {
     throw new CLIError('Apps data must be an array');
   }
@@ -45,11 +49,12 @@ export async function writeAppsJson(appsData, outputPath = 'src/data/apps.json',
 
     // Calculate file size for success message
     const stats = await fs.stat(outputPath);
-    const fileSizeKB = Math.round(stats.size / 1024 * 100) / 100;
+    const fileSizeKB = Math.round((stats.size / 1024) * 100) / 100;
 
-    logger.success(`JSON file written successfully: ${outputPath} (${fileSizeKB} KB)`);
+    logger.success(
+      `JSON file written successfully: ${outputPath} (${fileSizeKB} KB)`
+    );
     logger.success(`Total apps exported: ${appsData.length}`);
-
   } catch (error) {
     if (error instanceof CLIError) {
       throw error;
@@ -67,7 +72,7 @@ function formatAppsJson(appsData) {
   const jsonStructure = {
     apps: appsData,
     lastUpdated: new Date().toISOString(),
-    totalApps: appsData.length
+    totalApps: appsData.length,
   };
 
   return JSON.stringify(jsonStructure, null, 2);
@@ -103,7 +108,9 @@ async function ensureDirectory(dirPath) {
   try {
     await fs.mkdir(dirPath, { recursive: true });
   } catch (error) {
-    throw new CLIError(`Failed to create directory ${dirPath}: ${error.message}`);
+    throw new CLIError(
+      `Failed to create directory ${dirPath}: ${error.message}`
+    );
   }
 }
 
@@ -116,7 +123,7 @@ async function ensureDirectory(dirPath) {
  */
 async function writeFileAtomically(outputPath, jsonData, logger) {
   const tempPath = `${outputPath}.tmp`;
-  
+
   try {
     // Write to temporary file first
     await fs.writeFile(tempPath, jsonData, 'utf8');
@@ -125,15 +132,14 @@ async function writeFileAtomically(outputPath, jsonData, logger) {
     // Atomically move to final location
     await fs.rename(tempPath, outputPath);
     logger.verbose(`File moved to final location: ${outputPath}`);
-
   } catch (error) {
     // Clean up temporary file if it exists
     try {
       await fs.unlink(tempPath);
-    } catch (cleanupError) {
+    } catch {
       // Ignore cleanup errors
     }
-    
+
     throw new CLIError(`Failed to write file atomically: ${error.message}`);
   }
 }
@@ -148,21 +154,22 @@ async function writeFileAtomically(outputPath, jsonData, logger) {
 async function verifyJsonOutput(filePath, expectedData, logger) {
   try {
     const writtenData = await fs.readFile(filePath, 'utf8');
-    
+
     // Parse both to compare structure (not exact string match due to formatting)
     const writtenJson = JSON.parse(writtenData);
     const expectedJson = JSON.parse(expectedData);
-    
+
     if (writtenJson.totalApps !== expectedJson.totalApps) {
       throw new CLIError('Written file validation failed: app count mismatch');
     }
-    
+
     if (writtenJson.apps.length !== expectedJson.apps.length) {
-      throw new CLIError('Written file validation failed: apps array length mismatch');
+      throw new CLIError(
+        'Written file validation failed: apps array length mismatch'
+      );
     }
-    
+
     logger.verbose('JSON file verification completed successfully');
-    
   } catch (error) {
     if (error instanceof CLIError) {
       throw error;
