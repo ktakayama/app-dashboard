@@ -3,7 +3,6 @@
  */
 
 const ITUNES_SEARCH_BASE_URL = 'https://itunes.apple.com/search';
-const ITUNES_LOOKUP_BASE_URL = 'https://itunes.apple.com/lookup';
 
 /**
  * Make HTTP request to iTunes Search API
@@ -14,11 +13,13 @@ const ITUNES_LOOKUP_BASE_URL = 'https://itunes.apple.com/lookup';
 async function fetchFromItunes(url) {
   try {
     const response = await fetch(url);
-    
+
     if (!response.ok) {
-      throw new Error(`iTunes API request failed: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `iTunes API request failed: ${response.status} ${response.statusText}`
+      );
     }
-    
+
     const data = await response.json();
     return data;
   } catch (error) {
@@ -44,26 +45,29 @@ export async function searchAppByBundleId(bundleId) {
       term: bundleId,
       entity: 'software',
       country: 'jp',
-      limit: '1'
+      limit: '1',
     });
-    
+
     const url = `${ITUNES_SEARCH_BASE_URL}?${searchParams.toString()}`;
     const response = await fetchFromItunes(url);
-    
+
     if (!response.results || response.results.length === 0) {
       return null;
     }
-    
+
     const appData = response.results[0];
-    
+
     // Verify the bundle ID matches exactly
     if (appData.bundleId !== bundleId) {
       return null;
     }
-    
+
     return formatAppStoreInfo(appData);
   } catch (error) {
-    console.warn(`Failed to search app by bundle ID "${bundleId}":`, error.message);
+    console.warn(
+      `Failed to search app by bundle ID "${bundleId}":`,
+      error.message
+    );
     return null;
   }
 }
@@ -84,33 +88,39 @@ export async function searchAppByName(appName, developerName) {
       term: appName,
       entity: 'software',
       country: 'jp',
-      limit: '10'
+      limit: '10',
     });
-    
+
     const url = `${ITUNES_SEARCH_BASE_URL}?${searchParams.toString()}`;
     const response = await fetchFromItunes(url);
-    
+
     if (!response.results || response.results.length === 0) {
       return null;
     }
-    
+
     // Find best match - prioritize exact app name match
     let bestMatch = response.results[0];
-    
+
     for (const app of response.results) {
       // Exact app name match (case insensitive)
-      if (app.trackName && app.trackName.toLowerCase() === appName.toLowerCase()) {
+      if (
+        app.trackName &&
+        app.trackName.toLowerCase() === appName.toLowerCase()
+      ) {
         bestMatch = app;
         break;
       }
-      
+
       // If developer name provided, prioritize developer match
-      if (developerName && app.artistName && 
-          app.artistName.toLowerCase().includes(developerName.toLowerCase())) {
+      if (
+        developerName &&
+        app.artistName &&
+        app.artistName.toLowerCase().includes(developerName.toLowerCase())
+      ) {
         bestMatch = app;
       }
     }
-    
+
     return formatAppStoreInfo(bestMatch);
   } catch (error) {
     console.warn(`Failed to search app by name "${appName}":`, error.message);
@@ -128,14 +138,14 @@ export function formatAppStoreInfo(itunesData) {
     return {
       appStoreUrl: null,
       version: null,
-      iconUrl: null
+      iconUrl: null,
     };
   }
 
   return {
     appStoreUrl: itunesData.trackViewUrl || null,
     version: itunesData.version || null,
-    iconUrl: getHighResolutionIconUrl(itunesData)
+    iconUrl: getHighResolutionIconUrl(itunesData),
   };
 }
 
@@ -153,16 +163,16 @@ function getHighResolutionIconUrl(itunesData) {
   if (itunesData.artworkUrl512) {
     return itunesData.artworkUrl512;
   }
-  
+
   if (itunesData.artworkUrl100) {
     // Try to get 512x512 version by replacing the size in URL
     return itunesData.artworkUrl100.replace(/100x100bb/, '512x512bb');
   }
-  
+
   if (itunesData.artworkUrl60) {
     // Try to get 512x512 version by replacing the size in URL
     return itunesData.artworkUrl60.replace(/60x60bb/, '512x512bb');
   }
-  
+
   return null;
 }

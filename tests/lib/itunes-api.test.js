@@ -3,7 +3,11 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { searchAppByBundleId, searchAppByName, formatAppStoreInfo } from '../../scripts/lib/itunes-api.js';
+import {
+  searchAppByBundleId,
+  searchAppByName,
+  formatAppStoreInfo,
+} from '../../scripts/lib/itunes-api.js';
 
 // Mock fetch for testing
 global.fetch = vi.fn();
@@ -28,7 +32,7 @@ describe('iTunes Search API Module', () => {
     it('should return null when app is not found', async () => {
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ results: [] })
+        json: () => Promise.resolve({ results: [] }),
       });
 
       const result = await searchAppByBundleId('com.nonexistent.app');
@@ -38,14 +42,17 @@ describe('iTunes Search API Module', () => {
     it('should return null when bundle ID does not match exactly', async () => {
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({
-          results: [{
-            bundleId: 'com.different.app',
-            trackViewUrl: 'https://apps.apple.com/app/id123',
-            version: '1.0.0',
-            artworkUrl512: 'https://example.com/icon.png'
-          }]
-        })
+        json: () =>
+          Promise.resolve({
+            results: [
+              {
+                bundleId: 'com.different.app',
+                trackViewUrl: 'https://apps.apple.com/app/id123',
+                version: '1.0.0',
+                artworkUrl512: 'https://example.com/icon.png',
+              },
+            ],
+          }),
       });
 
       const result = await searchAppByBundleId('com.test.app');
@@ -57,19 +64,19 @@ describe('iTunes Search API Module', () => {
         bundleId: 'com.test.app',
         trackViewUrl: 'https://apps.apple.com/app/id123',
         version: '1.0.0',
-        artworkUrl512: 'https://example.com/icon512.png'
+        artworkUrl512: 'https://example.com/icon512.png',
       };
 
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ results: [mockAppData] })
+        json: () => Promise.resolve({ results: [mockAppData] }),
       });
 
       const result = await searchAppByBundleId('com.test.app');
       expect(result).toEqual({
         appStoreUrl: 'https://apps.apple.com/app/id123',
         version: '1.0.0',
-        iconUrl: 'https://example.com/icon512.png'
+        iconUrl: 'https://example.com/icon512.png',
       });
     });
   });
@@ -89,7 +96,7 @@ describe('iTunes Search API Module', () => {
     it('should return null when no apps are found', async () => {
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ results: [] })
+        json: () => Promise.resolve({ results: [] }),
       });
 
       const result = await searchAppByName('Nonexistent App');
@@ -102,19 +109,19 @@ describe('iTunes Search API Module', () => {
         artistName: 'Test Developer',
         trackViewUrl: 'https://apps.apple.com/app/id456',
         version: '2.0.0',
-        artworkUrl100: 'https://example.com/icon100.png'
+        artworkUrl100: 'https://example.com/icon100.png',
       };
 
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ results: [mockAppData] })
+        json: () => Promise.resolve({ results: [mockAppData] }),
       });
 
       const result = await searchAppByName('Test App');
       expect(result).toEqual({
         appStoreUrl: 'https://apps.apple.com/app/id456',
         version: '2.0.0',
-        iconUrl: 'https://example.com/icon512.png'
+        iconUrl: 'https://example.com/icon512.png',
       });
     });
 
@@ -125,27 +132,27 @@ describe('iTunes Search API Module', () => {
           artistName: 'Test Developer',
           trackViewUrl: 'https://apps.apple.com/app/id456',
           version: '1.0.0',
-          artworkUrl100: 'https://example.com/icon1.png'
+          artworkUrl100: 'https://example.com/icon1.png',
         },
         {
           trackName: 'Test App',
           artistName: 'Another Developer',
           trackViewUrl: 'https://apps.apple.com/app/id789',
           version: '2.0.0',
-          artworkUrl512: 'https://example.com/icon2.png'
-        }
+          artworkUrl512: 'https://example.com/icon2.png',
+        },
       ];
 
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ results: mockApps })
+        json: () => Promise.resolve({ results: mockApps }),
       });
 
       const result = await searchAppByName('Test App');
       expect(result).toEqual({
         appStoreUrl: 'https://apps.apple.com/app/id789',
         version: '2.0.0',
-        iconUrl: 'https://example.com/icon2.png'
+        iconUrl: 'https://example.com/icon2.png',
       });
     });
   });
@@ -159,26 +166,26 @@ describe('iTunes Search API Module', () => {
       expect(formatAppStoreInfo(null)).toEqual({
         appStoreUrl: null,
         version: null,
-        iconUrl: null
+        iconUrl: null,
       });
 
       expect(formatAppStoreInfo(undefined)).toEqual({
         appStoreUrl: null,
         version: null,
-        iconUrl: null
+        iconUrl: null,
       });
 
       expect(formatAppStoreInfo({})).toEqual({
         appStoreUrl: null,
         version: null,
-        iconUrl: null
+        iconUrl: null,
       });
     });
 
     it('should extract app store URL and version', () => {
       const mockData = {
         trackViewUrl: 'https://apps.apple.com/app/id123',
-        version: '1.5.0'
+        version: '1.5.0',
       };
 
       const result = formatAppStoreInfo(mockData);
@@ -190,7 +197,7 @@ describe('iTunes Search API Module', () => {
       const mockData = {
         artworkUrl512: 'https://example.com/icon512.png',
         artworkUrl100: 'https://example.com/icon100.png',
-        artworkUrl60: 'https://example.com/icon60.png'
+        artworkUrl60: 'https://example.com/icon60.png',
       };
 
       const result = formatAppStoreInfo(mockData);
@@ -199,7 +206,7 @@ describe('iTunes Search API Module', () => {
 
     it('should use artworkUrl100 and convert to 512x512 when artworkUrl512 not available', () => {
       const mockData = {
-        artworkUrl100: 'https://example.com/image/100x100bb.png'
+        artworkUrl100: 'https://example.com/image/100x100bb.png',
       };
 
       const result = formatAppStoreInfo(mockData);
@@ -208,7 +215,7 @@ describe('iTunes Search API Module', () => {
 
     it('should use artworkUrl60 and convert to 512x512 when higher res not available', () => {
       const mockData = {
-        artworkUrl60: 'https://example.com/image/60x60bb.png'
+        artworkUrl60: 'https://example.com/image/60x60bb.png',
       };
 
       const result = formatAppStoreInfo(mockData);
