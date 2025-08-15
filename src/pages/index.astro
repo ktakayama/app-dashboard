@@ -3,9 +3,7 @@ import type { AppsData } from "../types/app";
 import { promises as fs } from "fs";
 import path from "path";
 import LastUpdated from "../components/LastUpdated.astro";
-import PlatformBadge from "../components/PlatformBadge.svelte";
-import ProgressBar from "../components/ProgressBar.svelte";
-import PRStateLabel from "../components/PRStateLabel.svelte";
+import AppCard from "../components/AppCard.svelte";
 
 let appsData: AppsData | null = null;
 let error: string | null = null;
@@ -53,58 +51,9 @@ try {
         </div>
       ) : appsData ? (
         <div>
-          <div style="display: grid; gap: 20px; margin-top: 20px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-top: 20px;">
             {appsData.apps.map((app) => (
-              <div style="padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                  <img src={app.icon} alt={app.name} width="60" height="60" style="border-radius: 12px;" />
-                  <div>
-                    <h2 style="margin: 0;">{app.name}</h2>
-                    <p style="margin: 0; color: #666;">{app.repository}</p>
-                    <p style="margin: 0;">
-                      <PlatformBadge platform={app.platform} />
-                    </p>
-                  </div>
-                </div>
-                
-                {app.latestRelease && (
-                  <div style="margin-top: 15px;">
-                    <strong>最新リリース:</strong> 
-                    <a href={app.latestRelease.url} target="_blank" rel="noopener noreferrer">
-                      {app.latestRelease.version}
-                    </a>
-                    ({app.latestRelease.date})
-                  </div>
-                )}
-                
-                <ProgressBar milestone={app.milestone} client:load />
-
-                {app.recentPRs && app.recentPRs.length > 0 && (
-                  <div style="margin-top: 15px;">
-                    <strong>📝 Recent Pull Requests</strong>
-                    <ul style="margin-top: 8px; padding: 0;">
-                      {app.recentPRs.slice(0, 3).map((pr) => (
-                        <PRStateLabel 
-                          client:load
-                          state={pr.state}
-                          prNumber={pr.number}
-                          title={pr.title}
-                        />
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                
-                <div style="margin-top: 10px;">
-                  <a href={app.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>
-                  {app.links.appStore && (
-                    <> | <a href={app.links.appStore} target="_blank" rel="noopener noreferrer">App Store</a></>
-                  )}
-                  {app.links.playStore && (
-                    <> | <a href={app.links.playStore} target="_blank" rel="noopener noreferrer">Play Store</a></>
-                  )}
-                </div>
-              </div>
+              <AppCard app={app} client:load />
             ))}
           </div>
         </div>
