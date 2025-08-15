@@ -1,0 +1,75 @@
+/**
+ * Google Play Store API integration for Android app data retrieval
+ */
+
+import gplay from 'google-play-scraper';
+
+/**
+ * Search app by package ID from Google Play Store
+ * @param {string} packageId - Android package ID (e.g., "com.example.app")
+ * @returns {Promise<object|null>} Play Store information or null if not found
+ */
+export async function searchAppById(packageId) {
+  if (!packageId) {
+    return null;
+  }
+
+  try {
+    const appData = await gplay.app({
+      appId: packageId,
+      lang: 'ja',
+      country: 'jp',
+    });
+
+    return formatPlayStoreInfo(appData);
+  } catch (error) {
+    console.warn(
+      `Failed to search app by package ID "${packageId}":`,
+      error.message
+    );
+    return null;
+  }
+}
+
+/**
+ * Format Play Store response data to standardized app info
+ * @param {object} playStoreData - Raw Play Store response data
+ * @returns {object} Formatted Play Store information
+ */
+export function formatPlayStoreInfo(playStoreData) {
+  if (!playStoreData || typeof playStoreData !== 'object') {
+    return {
+      playStoreUrl: null,
+      version: null,
+      packageId: null,
+    };
+  }
+
+  return {
+    playStoreUrl: playStoreData.url || null,
+    version: playStoreData.version || null,
+    packageId: playStoreData.appId || null,
+  };
+}
+
+/**
+ * Get manual Play Store info from config when API fails
+ * @param {string} packageId - Android package ID
+ * @param {object} config - Configuration object containing manual values
+ * @returns {object} Manual Play Store information
+ */
+export function getManualPlayStoreInfo(packageId, config) {
+  if (!packageId || !config) {
+    return {
+      playStoreUrl: null,
+      version: null,
+      packageId: packageId || null,
+    };
+  }
+
+  return {
+    playStoreUrl: `https://play.google.com/store/apps/details?id=${packageId}`,
+    version: config.manualVersion || null,
+    packageId,
+  };
+}

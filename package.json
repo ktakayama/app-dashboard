@@ -14,10 +14,14 @@
     "@eslint/js": "^9.33.0",
     "commander": "^12.0.0",
     "eslint": "^9.33.0",
+    "globals": "^16.3.0",
     "prettier": "^3.6.2",
     "vitest": "^3.2.4"
   },
   "engines": {
     "bun": ">=1.0.0"
+  },
+  "dependencies": {
+    "google-play-scraper": "^10.0.1"
   }
 }

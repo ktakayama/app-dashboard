@@ -5,7 +5,8 @@
       "repo": "sample-app",
       "appName": "Sample Application",
       "platforms": ["ios", "android"],
-      "appStoreId": "123456789"
+      "appStoreId": "123456789",
+      "packageId": "com.example.app"
     }
   ],
   "outputPath": "src/data/apps.json"
