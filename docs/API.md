@@ -363,3 +363,161 @@ try {
   return null;
 }
 ```
+
+## エラーハンドリングシステム
+
+### CLIError クラス
+
+カスタムエラークラスを使用してCLI特有のエラーを管理します。
+
+```javascript
+export class CLIError extends Error {
+  constructor(message, code = 1) {
+    super(message);
+    this.name = 'CLIError';
+    this.code = code;
+  }
+}
+```
+
+#### 使用例
+
+```javascript
+// 設定ファイルが見つからない場合
+if (!existsSync(configPath)) {
+  throw new CLIError(`Configuration file not found at ${configPath}`);
+}
+
+// JSON解析エラー
+try {
+  config = JSON.parse(configContent);
+} catch (error) {
+  throw new CLIError(`Failed to parse configuration file: ${error.message}`);
+}
+```
+
+### エラーハンドラー
+
+#### 統一エラー処理
+
+```javascript
+export function handleError(error, logger) {
+  if (error instanceof CLIError) {
+    logger.error(error.message);
+    process.exit(error.code);
+  } else if (error instanceof Error) {
+    logger.error(`Unexpected error: ${error.message}`);
+    if (logger.isVerbose) {
+      logger.error(error.stack);
+    }
+    process.exit(1);
+  } else {
+    logger.error(`Unknown error: ${error}`);
+    process.exit(1);
+  }
+}
+```
+
+#### グローバル例外キャッチ
+
+```javascript
+export function setupGlobalErrorHandlers(logger) {
+  process.on('uncaughtException', (error) => {
+    logger.error('Uncaught exception:', error.message);
+    if (logger.isVerbose) {
+      logger.error(error.stack);
+    }
+    process.exit(1);
+  });
+
+  process.on('unhandledRejection', (reason, promise) => {
+    logger.error('Unhandled rejection at:', promise, 'reason:', reason);
+    process.exit(1);
+  });
+}
+```
+
+## ログシステム
+
+### Logger クラス
+
+階層化されたログレベルを提供します。
+
+```javascript
+export class Logger {
+  constructor(verbose = false) {
+    this.isVerbose = verbose;
+  }
+
+  info(message, ...args) {
+    console.log(`[INFO] ${message}`, ...args);
+  }
+
+  verbose(message, ...args) {
+    if (this.isVerbose) {
+      console.log(`[VERBOSE] ${message}`, ...args);
+    }
+  }
+
+  warn(message, ...args) {
+    console.warn(`[WARN] ${message}`, ...args);
+  }
+
+  error(message, ...args) {
+    console.error(`[ERROR] ${message}`, ...args);
+  }
+
+  success(message, ...args) {
+    console.log(`[SUCCESS] ${message}`, ...args);
+  }
+}
+```
+
+### ログレベル
+
+| レベル    | 用途                                       | 表示条件           |
+| --------- | ------------------------------------------ | ------------------ |
+| `INFO`    | 一般的な処理状況の報告                     | 常時表示           |
+| `VERBOSE` | 詳細な処理内容やデバッグ情報               | --verbose 時のみ   |
+| `WARN`    | 警告（処理は継続するが注意が必要な状況）   | 常時表示           |
+| `ERROR`   | エラー（処理が失敗した場合）               | 常時表示           |
+| `SUCCESS` | 処理完了や成功の報告                       | 常時表示           |
+
+### 使用例
+
+```javascript
+// ロガーの初期化
+const logger = createLogger(options.verbose);
+
+// 各種ログの出力
+logger.info('App Dashboard Data Updater');
+logger.verbose('Command line options:', options);
+logger.warn(`Failed to process ${failedApps.length}`);
+logger.error('Configuration file not found');
+logger.success(`Update completed in ${duration}s`);
+```
+
+### 実装での活用
+
+#### 並列処理でのエラー管理
+
+```javascript
+const results = await Promise.allSettled(
+  config.repositories.map(async (repoConfig) => {
+    logger.verbose(`Processing ${repoConfig.repository}...`);
+    const appData = await mergeAppData(repoConfig);
+    logger.verbose(`✓ Completed ${repoConfig.repository}`);
+    return appData;
+  })
+);
+
+// 成功・失敗の結果を分離
+results.forEach((result, index) => {
+  const repoConfig = config.repositories[index];
+  if (result.status === 'fulfilled') {
+    successfulApps.push(result.value);
+  } else {
+    logger.error(`Failed to process ${repoConfig.repository}: ${result.reason.message}`);
+  }
+});
+```
