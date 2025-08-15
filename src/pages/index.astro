@@ -3,6 +3,7 @@ import type { AppsData } from "../types/app";
 import { promises as fs } from "fs";
 import path from "path";
 import LastUpdated from "../components/LastUpdated.astro";
+import PRStateLabel from "../components/PRStateLabel.svelte";
 
 let appsData: AppsData | null = null;
 let error: string | null = null;
@@ -85,6 +86,22 @@ try {
                       />
                     </div>
                     <small>{app.milestone.closedIssues}/{app.milestone.totalIssues} issues</small>
+                  </div>
+                )}
+
+                {app.recentPRs && app.recentPRs.length > 0 && (
+                  <div style="margin-top: 15px;">
+                    <strong>📝 Recent Pull Requests</strong>
+                    <ul style="margin-top: 8px; padding: 0;">
+                      {app.recentPRs.slice(0, 3).map((pr) => (
+                        <PRStateLabel 
+                          client:load
+                          state={pr.state}
+                          prNumber={pr.number}
+                          title={pr.title}
+                        />
+                      ))}
+                    </ul>
                   </div>
                 )}
                 
