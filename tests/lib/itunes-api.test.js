@@ -1,84 +1,19 @@
 /**
- * Unit tests for iTunes Search API module
+ * Unit tests for iTunes Lookup API module
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   searchAppById,
-  searchAppByBundleId,
   formatAppStoreInfo,
 } from '../../scripts/lib/itunes-api.js';
 
 // Mock fetch for testing
 global.fetch = vi.fn();
 
-describe('iTunes Search API Module', () => {
+describe('iTunes Lookup API Module', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-
-  describe('searchAppByBundleId', () => {
-    it('should export searchAppByBundleId function', () => {
-      expect(typeof searchAppByBundleId).toBe('function');
-    });
-
-    it('should return null for invalid bundle ID input', async () => {
-      expect(await searchAppByBundleId('')).toBe(null);
-      expect(await searchAppByBundleId(null)).toBe(null);
-      expect(await searchAppByBundleId(undefined)).toBe(null);
-      expect(await searchAppByBundleId(123)).toBe(null);
-    });
-
-    it('should return null when app is not found', async () => {
-      fetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ results: [] }),
-      });
-
-      const result = await searchAppByBundleId('com.nonexistent.app');
-      expect(result).toBe(null);
-    });
-
-    it('should return null when bundle ID does not match exactly', async () => {
-      fetch.mockResolvedValueOnce({
-        ok: true,
-        json: () =>
-          Promise.resolve({
-            results: [
-              {
-                bundleId: 'com.different.app',
-                trackViewUrl: 'https://apps.apple.com/app/id123',
-                version: '1.0.0',
-                artworkUrl512: 'https://example.com/icon.png',
-              },
-            ],
-          }),
-      });
-
-      const result = await searchAppByBundleId('com.test.app');
-      expect(result).toBe(null);
-    });
-
-    it('should return formatted app info for valid bundle ID', async () => {
-      const mockAppData = {
-        bundleId: 'com.test.app',
-        trackViewUrl: 'https://apps.apple.com/app/id123',
-        version: '1.0.0',
-        artworkUrl512: 'https://example.com/icon512.png',
-      };
-
-      fetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ results: [mockAppData] }),
-      });
-
-      const result = await searchAppByBundleId('com.test.app');
-      expect(result).toEqual({
-        appStoreUrl: 'https://apps.apple.com/app/id123',
-        version: '1.0.0',
-        iconUrl: 'https://example.com/icon512.png',
-      });
-    });
   });
 
   describe('searchAppById', () => {

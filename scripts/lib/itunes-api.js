@@ -1,12 +1,11 @@
 /**
- * iTunes Search API integration for App Store data retrieval
+ * iTunes Lookup API integration for App Store data retrieval
  */
 
-const ITUNES_SEARCH_BASE_URL = 'https://itunes.apple.com/search';
 const ITUNES_LOOKUP_BASE_URL = 'https://itunes.apple.com/lookup';
 
 /**
- * Make HTTP request to iTunes Search API
+ * Make HTTP request to iTunes Lookup API
  * @param {string} url - Complete API URL with parameters
  * @returns {Promise<object>} iTunes API response
  * @throws {Error} When API request fails
@@ -58,48 +57,6 @@ export async function searchAppById(appId) {
     return formatAppStoreInfo(appData);
   } catch (error) {
     console.warn(`Failed to search app by ID "${appId}":`, error.message);
-    return null;
-  }
-}
-
-/**
- * Search app by Bundle ID from iTunes Search API
- * @param {string} bundleId - App bundle identifier
- * @returns {Promise<object|null>} App Store information or null if not found
- */
-export async function searchAppByBundleId(bundleId) {
-  if (!bundleId || typeof bundleId !== 'string') {
-    return null;
-  }
-
-  try {
-    const searchParams = new URLSearchParams({
-      term: bundleId,
-      entity: 'software',
-      country: 'jp',
-      limit: '1',
-    });
-
-    const url = `${ITUNES_SEARCH_BASE_URL}?${searchParams.toString()}`;
-    const response = await fetchFromItunes(url);
-
-    if (!response.results || response.results.length === 0) {
-      return null;
-    }
-
-    const appData = response.results[0];
-
-    // Verify the bundle ID matches exactly
-    if (appData.bundleId !== bundleId) {
-      return null;
-    }
-
-    return formatAppStoreInfo(appData);
-  } catch (error) {
-    console.warn(
-      `Failed to search app by bundle ID "${bundleId}":`,
-      error.message
-    );
     return null;
   }
 }
