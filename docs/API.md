@@ -235,12 +235,12 @@ $ bun run update --verbose
 
 ### オプション
 
-| オプション            | 説明                                               | 例                          |
-| --------------------- | -------------------------------------------------- | --------------------------- |
-| `-v, --verbose`       | 詳細なログを出力（デバッグ情報、処理詳細を表示）   | `--verbose`                 |
-| `-c, --config <path>` | 設定ファイルのパスを指定（デフォルト: config.json）| `--config custom.json`      |
-| `--dry-run`           | 実際の更新を行わずにテスト実行（ファイル保存なし） | `--dry-run`                 |
-| `-h, --help`          | ヘルプメッセージを表示                             | `--help`                    |
+| オプション            | 説明                                                | 例                     |
+| --------------------- | --------------------------------------------------- | ---------------------- |
+| `-v, --verbose`       | 詳細なログを出力（デバッグ情報、処理詳細を表示）    | `--verbose`            |
+| `-c, --config <path>` | 設定ファイルのパスを指定（デフォルト: config.json） | `--config custom.json` |
+| `--dry-run`           | 実際の更新を行わずにテスト実行（ファイル保存なし）  | `--dry-run`            |
+| `-h, --help`          | ヘルプメッセージを表示                              | `--help`               |
 
 #### オプション詳細
 
@@ -446,7 +446,10 @@ try {
   });
   return formatPlayStoreInfo(appData);
 } catch (error) {
-  console.warn(`Failed to search app by package ID "${packageId}":`, error.message);
+  console.warn(
+    `Failed to search app by package ID "${packageId}":`,
+    error.message
+  );
   return null;
 }
 ```
@@ -562,13 +565,13 @@ export class Logger {
 
 ### ログレベル
 
-| レベル    | 用途                                       | 表示条件           |
-| --------- | ------------------------------------------ | ------------------ |
-| `INFO`    | 一般的な処理状況の報告                     | 常時表示           |
-| `VERBOSE` | 詳細な処理内容やデバッグ情報               | --verbose 時のみ   |
-| `WARN`    | 警告（処理は継続するが注意が必要な状況）   | 常時表示           |
-| `ERROR`   | エラー（処理が失敗した場合）               | 常時表示           |
-| `SUCCESS` | 処理完了や成功の報告                       | 常時表示           |
+| レベル    | 用途                                     | 表示条件         |
+| --------- | ---------------------------------------- | ---------------- |
+| `INFO`    | 一般的な処理状況の報告                   | 常時表示         |
+| `VERBOSE` | 詳細な処理内容やデバッグ情報             | --verbose 時のみ |
+| `WARN`    | 警告（処理は継続するが注意が必要な状況） | 常時表示         |
+| `ERROR`   | エラー（処理が失敗した場合）             | 常時表示         |
+| `SUCCESS` | 処理完了や成功の報告                     | 常時表示         |
 
 ### 使用例
 
@@ -604,7 +607,9 @@ results.forEach((result, index) => {
   if (result.status === 'fulfilled') {
     successfulApps.push(result.value);
   } else {
-    logger.error(`Failed to process ${repoConfig.repository}: ${result.reason.message}`);
+    logger.error(
+      `Failed to process ${repoConfig.repository}: ${result.reason.message}`
+    );
   }
 });
 ```
