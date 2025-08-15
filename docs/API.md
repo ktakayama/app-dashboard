@@ -255,3 +255,111 @@ curl https://itunes.apple.com/lookup?id=6446930619 | jq -r '.results[].version'
 - iTunes Search APIは公式APIで、認証不要
 - レート制限は緩やかで、通常の使用では問題になりません
 - スクレイピングよりも安定して動作します
+
+## Google Play Store 情報の取得
+
+### Google Play Scraper
+
+Google Playのバージョン情報とアプリデータはgoogle-play-scraperライブラリを使用して取得します。
+
+#### パッケージ
+
+```javascript
+import gplay from 'google-play-scraper';
+```
+
+#### アプリ情報の取得
+
+```javascript
+const appData = await gplay.app({
+  appId: 'com.example.app',
+  lang: 'ja',
+  country: 'jp',
+});
+```
+
+#### レスポンス例
+
+```json
+{
+  "appId": "com.example.app",
+  "title": "App Name",
+  "url": "https://play.google.com/store/apps/details?id=com.example.app",
+  "version": "1.2.3",
+  "released": "Aug 10, 2024",
+  "updated": "Aug 10, 2024",
+  "genre": "Productivity",
+  "genreId": "PRODUCTIVITY",
+  "familyGenre": null,
+  "familyGenreId": null,
+  "icon": "https://play-lh.googleusercontent.com/...",
+  "headerImage": "https://play-lh.googleusercontent.com/...",
+  "screenshots": ["https://play-lh.googleusercontent.com/..."],
+  "video": null,
+  "summary": "アプリの説明",
+  "installs": "1,000+",
+  "minInstalls": 1000,
+  "score": 4.5,
+  "scoreText": "4.5",
+  "ratings": 123,
+  "reviews": 45,
+  "histogram": {
+    "1": 2,
+    "2": 1,
+    "3": 5,
+    "4": 12,
+    "5": 25
+  },
+  "price": 0,
+  "free": true,
+  "currency": "USD",
+  "priceText": "Free",
+  "developer": "Developer Name",
+  "developerId": "1234567890",
+  "developerEmail": "developer@example.com",
+  "developerWebsite": "https://example.com",
+  "developerAddress": "123 Example St, Example City, EX 12345",
+  "privacyPolicy": "https://example.com/privacy",
+  "contentRating": "Everyone",
+  "contentRatingDescription": "No objectionable content",
+  "adSupported": false,
+  "released": "Aug 1, 2023",
+  "updated": 1691654400000,
+  "recentChanges": "Bug fixes and improvements"
+}
+```
+
+#### 取得できる主要な情報
+
+- `version`: 現在のバージョン
+- `title`: アプリ名
+- `url`: Google Play Store URL
+- `icon`: アプリアイコンURL
+- `updated`: 最終更新日時
+- `summary`: アプリの説明
+- `developer`: 開発者名
+- `score`: 評価スコア (1-5)
+- `ratings`: 評価数
+
+#### 実装上の注意事項
+
+- スクレイピングベースのため、Google Playの仕様変更により動作しなくなる可能性があります
+- レート制限を避けるため、適切な間隔での実行を推奨
+- エラーハンドリングが重要（アプリが見つからない場合等）
+- 日本語ロケール（`lang: 'ja'`, `country: 'jp'`）で取得
+
+#### エラーハンドリング例
+
+```javascript
+try {
+  const appData = await gplay.app({
+    appId: packageId,
+    lang: 'ja',
+    country: 'jp',
+  });
+  return formatPlayStoreInfo(appData);
+} catch (error) {
+  console.warn(`Failed to search app by package ID "${packageId}":`, error.message);
+  return null;
+}
+```
