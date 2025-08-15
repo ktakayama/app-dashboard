@@ -33,3 +33,4 @@ export class Logger {
 export function createLogger(verbose = false) {
   return new Logger(verbose);
 }
+

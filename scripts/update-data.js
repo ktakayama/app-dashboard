@@ -9,7 +9,11 @@ import { readFileSync, existsSync } from 'fs';
 import { join, dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { createLogger } from './lib/logger.js';
-import { CLIError, handleError, setupGlobalErrorHandlers } from './lib/error-handler.js';
+import {
+  CLIError,
+  handleError,
+  setupGlobalErrorHandlers,
+} from './lib/error-handler.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -21,7 +25,9 @@ const packageJson = JSON.parse(
 // Initialize CLI program
 program
   .name('update-data')
-  .description('Update app development dashboard data from GitHub and iTunes APIs')
+  .description(
+    'Update app development dashboard data from GitHub and iTunes APIs'
+  )
   .version(packageJson.version)
   .option('-v, --verbose', 'enable verbose logging')
   .option('-c, --config <path>', 'path to configuration file', 'config.json')
@@ -61,7 +67,7 @@ try {
   try {
     const configContent = readFileSync(configPath, 'utf-8');
     config = JSON.parse(configContent);
-    
+
     logger.verbose(`Loaded configuration from ${configPath}`);
     if (options.verbose) {
       logger.verbose('Configuration:', JSON.stringify(config, null, 2));
@@ -75,9 +81,11 @@ try {
     throw new CLIError('Configuration must contain a "repositories" array');
   }
 
-  logger.info(`Starting update process for ${config.repositories.length} repositories...`);
+  logger.info(
+    `Starting update process for ${config.repositories.length} repositories...`
+  );
   logger.success('Basic CLI structure initialized successfully');
-
 } catch (error) {
   handleError(error, logger);
 }
+
