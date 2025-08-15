@@ -8,6 +8,8 @@ import { program } from 'commander';
 import { readFileSync, existsSync } from 'fs';
 import { join, dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
+import { createLogger } from './lib/logger.js';
+import { CLIError, handleError, setupGlobalErrorHandlers } from './lib/error-handler.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -31,44 +33,51 @@ program.parse(process.argv);
 
 const options = program.opts();
 
+// Initialize logger and error handling
+const logger = createLogger(options.verbose);
+setupGlobalErrorHandlers(logger);
+
 // Main execution
-console.log('App Dashboard Data Updater');
-console.log('Version:', packageJson.version);
-
-if (options.verbose) {
-  console.log('Options:', options);
-}
-
-if (options.dryRun) {
-  console.log('Running in dry-run mode - no data will be saved');
-}
-
-// Load configuration file
-const configPath = resolve(process.cwd(), options.config);
-
-if (!existsSync(configPath)) {
-  console.error(`Error: Configuration file not found at ${configPath}`);
-  process.exit(1);
-}
-
-let config;
 try {
-  const configContent = readFileSync(configPath, 'utf-8');
-  config = JSON.parse(configContent);
-  
+  logger.info('App Dashboard Data Updater');
+  logger.info(`Version: ${packageJson.version}`);
+
   if (options.verbose) {
-    console.log(`Loaded configuration from ${configPath}`);
-    console.log('Configuration:', JSON.stringify(config, null, 2));
+    logger.verbose('Command line options:', options);
   }
+
+  if (options.dryRun) {
+    logger.info('Running in dry-run mode - no data will be saved');
+  }
+
+  // Load configuration file
+  const configPath = resolve(process.cwd(), options.config);
+
+  if (!existsSync(configPath)) {
+    throw new CLIError(`Configuration file not found at ${configPath}`);
+  }
+
+  let config;
+  try {
+    const configContent = readFileSync(configPath, 'utf-8');
+    config = JSON.parse(configContent);
+    
+    logger.verbose(`Loaded configuration from ${configPath}`);
+    if (options.verbose) {
+      logger.verbose('Configuration:', JSON.stringify(config, null, 2));
+    }
+  } catch (error) {
+    throw new CLIError(`Failed to parse configuration file: ${error.message}`);
+  }
+
+  // Validate configuration
+  if (!config.repositories || !Array.isArray(config.repositories)) {
+    throw new CLIError('Configuration must contain a "repositories" array');
+  }
+
+  logger.info(`Starting update process for ${config.repositories.length} repositories...`);
+  logger.success('Basic CLI structure initialized successfully');
+
 } catch (error) {
-  console.error(`Error: Failed to parse configuration file: ${error.message}`);
-  process.exit(1);
+  handleError(error, logger);
 }
-
-// Validate configuration
-if (!config.repositories || !Array.isArray(config.repositories)) {
-  console.error('Error: Configuration must contain a "repositories" array');
-  process.exit(1);
-}
-
-console.log(`Starting update process for ${config.repositories.length} repositories...`);
