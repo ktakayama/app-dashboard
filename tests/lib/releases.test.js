@@ -17,7 +17,7 @@ vi.mock('../../scripts/lib/github-cli.js', () => ({
   ghAPI: vi.fn(),
 }));
 
-import { executeGH, ghAPI } from '../../scripts/lib/github-cli.js';
+import { ghAPI } from '../../scripts/lib/github-cli.js';
 
 describe('Release Information Module', () => {
   beforeEach(() => {
@@ -86,26 +86,18 @@ describe('Release Information Module', () => {
 
   describe('getLatestRelease', () => {
     it('should return formatted release data for stable release', async () => {
-      const mockGHOutput = JSON.stringify({
-        tagName: 'v1.5.0',
-        publishedAt: '2025-01-10T14:20:00Z',
-        url: 'https://github.com/test/repo/releases/tag/v1.5.0',
-        isPrerelease: false,
-      });
+      const mockAPIResponse = {
+        tag_name: 'v1.5.0',
+        published_at: '2025-01-10T14:20:00Z',
+        html_url: 'https://github.com/test/repo/releases/tag/v1.5.0',
+        prerelease: false,
+      };
 
-      executeGH.mockResolvedValue(mockGHOutput);
+      ghAPI.mockResolvedValue(mockAPIResponse);
 
       const result = await getLatestRelease('test', 'repo');
 
-      expect(executeGH).toHaveBeenCalledWith([
-        'release',
-        'view',
-        'latest',
-        '--repo',
-        'test/repo',
-        '--json',
-        'tagName,publishedAt,url,isPrerelease',
-      ]);
+      expect(ghAPI).toHaveBeenCalledWith('repos/test/repo/releases/latest');
 
       expect(result).toEqual({
         version: 'v1.5.0',
@@ -115,14 +107,14 @@ describe('Release Information Module', () => {
     });
 
     it('should return null for prerelease', async () => {
-      const mockGHOutput = JSON.stringify({
-        tagName: 'v2.0.0-beta.1',
-        publishedAt: '2025-01-12T09:15:00Z',
-        url: 'https://github.com/test/repo/releases/tag/v2.0.0-beta.1',
-        isPrerelease: true,
-      });
+      const mockAPIResponse = {
+        tag_name: 'v2.0.0-beta.1',
+        published_at: '2025-01-12T09:15:00Z',
+        html_url: 'https://github.com/test/repo/releases/tag/v2.0.0-beta.1',
+        prerelease: true,
+      };
 
-      executeGH.mockResolvedValue(mockGHOutput);
+      ghAPI.mockResolvedValue(mockAPIResponse);
 
       const result = await getLatestRelease('test', 'repo');
 
@@ -130,7 +122,7 @@ describe('Release Information Module', () => {
     });
 
     it('should return null when no releases found', async () => {
-      executeGH.mockRejectedValue(new Error('No releases found'));
+      ghAPI.mockRejectedValue(new Error('No releases found'));
 
       const result = await getLatestRelease('test', 'repo');
 
@@ -140,41 +132,32 @@ describe('Release Information Module', () => {
 
   describe('getReleases', () => {
     it('should return formatted release list excluding prereleases', async () => {
-      const mockGHOutput = JSON.stringify([
+      const mockAPIResponse = [
         {
-          tagName: 'v1.3.0',
-          publishedAt: '2025-01-08T11:45:00Z',
-          url: 'https://github.com/test/repo/releases/tag/v1.3.0',
-          isPrerelease: false,
+          tag_name: 'v1.3.0',
+          published_at: '2025-01-08T11:45:00Z',
+          html_url: 'https://github.com/test/repo/releases/tag/v1.3.0',
+          prerelease: false,
         },
         {
-          tagName: 'v1.3.0-rc.1',
-          publishedAt: '2025-01-05T16:30:00Z',
-          url: 'https://github.com/test/repo/releases/tag/v1.3.0-rc.1',
-          isPrerelease: true,
+          tag_name: 'v1.3.0-rc.1',
+          published_at: '2025-01-05T16:30:00Z',
+          html_url: 'https://github.com/test/repo/releases/tag/v1.3.0-rc.1',
+          prerelease: true,
         },
         {
-          tagName: 'v1.2.0',
-          publishedAt: '2024-12-20T08:00:00Z',
-          url: 'https://github.com/test/repo/releases/tag/v1.2.0',
-          isPrerelease: false,
+          tag_name: 'v1.2.0',
+          published_at: '2024-12-20T08:00:00Z',
+          html_url: 'https://github.com/test/repo/releases/tag/v1.2.0',
+          prerelease: false,
         },
-      ]);
+      ];
 
-      executeGH.mockResolvedValue(mockGHOutput);
+      ghAPI.mockResolvedValue(mockAPIResponse);
 
       const result = await getReleases('test', 'repo', 3);
 
-      expect(executeGH).toHaveBeenCalledWith([
-        'release',
-        'list',
-        '--repo',
-        'test/repo',
-        '--limit',
-        '3',
-        '--json',
-        'tagName,publishedAt,url,isPrerelease',
-      ]);
+      expect(ghAPI).toHaveBeenCalledWith('repos/test/repo/releases?per_page=3');
 
       expect(result).toHaveLength(2);
       expect(result[0]).toEqual({
@@ -190,7 +173,7 @@ describe('Release Information Module', () => {
     });
 
     it('should return empty array when no releases found', async () => {
-      executeGH.mockRejectedValue(new Error('No releases found'));
+      ghAPI.mockRejectedValue(new Error('No releases found'));
 
       const result = await getReleases('test', 'repo');
 
