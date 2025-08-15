@@ -47,7 +47,6 @@ export async function getRepositoryInfo(owner, repo) {
   }
 }
 
-
 /**
  * Get app name from config
  * @param {string} appName - App name from config.json
