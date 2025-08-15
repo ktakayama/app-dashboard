@@ -60,7 +60,7 @@
     {#if app.recentPRs && app.recentPRs.length > 0}
       <ul class="list-none m-0 p-0 flex flex-col gap-1">
         {#each app.recentPRs as pr}
-          <PRStateLabel state={pr.state} prNumber={pr.number} title={pr.title} />
+          <PRStateLabel state={pr.state} prNumber={pr.number} title={pr.title} url={pr.url} />
         {/each}
       </ul>
     {:else}
