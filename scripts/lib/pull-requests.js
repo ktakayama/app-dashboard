@@ -20,9 +20,10 @@ export async function getRecentPullRequests(owner, repo, limit = 3) {
       getPRsByState(owner, repo, 'closed', 5),
     ]);
 
-    // Combine and sort by update time
+    // Combine and remove duplicates by PR number
     const allPRs = [...openPRs, ...mergedPRs, ...closedPRs];
-    const sortedPRs = sortPRsByUpdateTime(allPRs);
+    const uniquePRs = removeDuplicatePRs(allPRs);
+    const sortedPRs = sortPRsByUpdateTime(uniquePRs);
 
     // Return top N PRs
     return sortedPRs.slice(0, limit).map(normalizePRState);
@@ -109,6 +110,22 @@ export function normalizePRState(pr) {
     state: pr.state,
     mergedAt: pr.mergedAt || null,
   };
+}
+
+/**
+ * Remove duplicate PRs by number (keep the first occurrence)
+ * @param {object[]} prs - Array of PR objects
+ * @returns {object[]} Array of unique PRs
+ */
+function removeDuplicatePRs(prs) {
+  const seen = new Set();
+  return prs.filter((pr) => {
+    if (seen.has(pr.number)) {
+      return false;
+    }
+    seen.add(pr.number);
+    return true;
+  });
 }
 
 /**
