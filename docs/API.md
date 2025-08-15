@@ -168,7 +168,6 @@ interface Config {
 }
 ```
 
-
 ## App Store 情報の取得
 
 ### iTunes Search API
