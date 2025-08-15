@@ -1,0 +1,12 @@
+{
+  "repositories": [
+    {
+      "owner": "example",
+      "repo": "sample-app",
+      "platforms": ["ios", "android"]
+    }
+  ],
+  "outputPath": "src/data/apps.json",
+  "itunesSearchUrl": "https://itunes.apple.com/search"
+}
+

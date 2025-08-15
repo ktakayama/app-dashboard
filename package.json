@@ -1,0 +1,19 @@
+{
+  "name": "app-dashboard",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Mobile app development dashboard for monitoring multiple GitHub repositories",
+  "scripts": {
+    "update": "bun scripts/update-data.js",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "commander": "^12.0.0"
+  },
+  "engines": {
+    "bun": ">=1.0.0"
+  }
+}
