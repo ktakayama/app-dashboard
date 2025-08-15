@@ -14,11 +14,11 @@ vi.mock('../../scripts/lib/releases.js', () => ({
 }));
 
 vi.mock('../../scripts/lib/milestones.js', () => ({
-  getMilestone: vi.fn(),
+  getCurrentMilestone: vi.fn(),
 }));
 
 vi.mock('../../scripts/lib/pull-requests.js', () => ({
-  getRecentPRs: vi.fn(),
+  getRecentPullRequests: vi.fn(),
 }));
 
 vi.mock('../../scripts/lib/itunes-api.js', () => ({
@@ -26,15 +26,15 @@ vi.mock('../../scripts/lib/itunes-api.js', () => ({
 }));
 
 vi.mock('../../scripts/lib/play-store.js', () => ({
-  getPlayStoreInfo: vi.fn(),
+  searchAppById: vi.fn(),
 }));
 
 import { getRepositoryInfo } from '../../scripts/lib/repository.js';
 import { getLatestRelease } from '../../scripts/lib/releases.js';
-import { getMilestone } from '../../scripts/lib/milestones.js';
-import { getRecentPRs } from '../../scripts/lib/pull-requests.js';
+import { getCurrentMilestone } from '../../scripts/lib/milestones.js';
+import { getRecentPullRequests } from '../../scripts/lib/pull-requests.js';
 import { searchAppById } from '../../scripts/lib/itunes-api.js';
-import { getPlayStoreInfo } from '../../scripts/lib/play-store.js';
+import { searchAppById as searchPlayStoreAppById } from '../../scripts/lib/play-store.js';
 
 describe('Data Merger Module', () => {
   beforeEach(() => {
@@ -116,10 +116,10 @@ describe('Data Merger Module', () => {
     it('should merge all API data successfully', async () => {
       getRepositoryInfo.mockResolvedValue(mockRepositoryData);
       getLatestRelease.mockResolvedValue(mockReleaseData);
-      getMilestone.mockResolvedValue(mockMilestoneData);
-      getRecentPRs.mockResolvedValue(mockPRData);
+      getCurrentMilestone.mockResolvedValue(mockMilestoneData);
+      getRecentPullRequests.mockResolvedValue(mockPRData);
       searchAppById.mockResolvedValue(mockItunesData);
-      getPlayStoreInfo.mockResolvedValue(mockPlayStoreData);
+      searchPlayStoreAppById.mockResolvedValue(mockPlayStoreData);
 
       const result = await mergeAppData(mockRepoConfig);
 
@@ -173,10 +173,10 @@ describe('Data Merger Module', () => {
     it('should handle missing optional data gracefully', async () => {
       getRepositoryInfo.mockResolvedValue(mockRepositoryData);
       getLatestRelease.mockResolvedValue(null);
-      getMilestone.mockResolvedValue(null);
-      getRecentPRs.mockResolvedValue([]);
+      getCurrentMilestone.mockResolvedValue(null);
+      getRecentPullRequests.mockResolvedValue([]);
       searchAppById.mockResolvedValue(null);
-      getPlayStoreInfo.mockResolvedValue(null);
+      searchPlayStoreAppById.mockResolvedValue(null);
 
       const minimalConfig = {
         repository: 'owner/test-repo',
@@ -204,10 +204,10 @@ describe('Data Merger Module', () => {
     it('should determine platform correctly for iOS only', async () => {
       getRepositoryInfo.mockResolvedValue(mockRepositoryData);
       getLatestRelease.mockResolvedValue(null);
-      getMilestone.mockResolvedValue(null);
-      getRecentPRs.mockResolvedValue([]);
+      getCurrentMilestone.mockResolvedValue(null);
+      getRecentPullRequests.mockResolvedValue([]);
       searchAppById.mockResolvedValue(mockItunesData);
-      getPlayStoreInfo.mockResolvedValue(null);
+      searchPlayStoreAppById.mockResolvedValue(null);
 
       const iosConfig = {
         repository: 'owner/test-repo',
@@ -229,10 +229,10 @@ describe('Data Merger Module', () => {
     it('should determine platform correctly for Android only', async () => {
       getRepositoryInfo.mockResolvedValue(mockRepositoryData);
       getLatestRelease.mockResolvedValue(null);
-      getMilestone.mockResolvedValue(null);
-      getRecentPRs.mockResolvedValue([]);
+      getCurrentMilestone.mockResolvedValue(null);
+      getRecentPullRequests.mockResolvedValue([]);
       searchAppById.mockResolvedValue(null);
-      getPlayStoreInfo.mockResolvedValue(mockPlayStoreData);
+      searchPlayStoreAppById.mockResolvedValue(mockPlayStoreData);
 
       const androidConfig = {
         repository: 'owner/test-repo',
@@ -266,10 +266,10 @@ describe('Data Merger Module', () => {
 
       expect(getRepositoryInfo).not.toHaveBeenCalled();
       expect(getLatestRelease).not.toHaveBeenCalled();
-      expect(getMilestone).not.toHaveBeenCalled();
-      expect(getRecentPRs).not.toHaveBeenCalled();
+      expect(getCurrentMilestone).not.toHaveBeenCalled();
+      expect(getRecentPullRequests).not.toHaveBeenCalled();
       expect(searchAppById).not.toHaveBeenCalled();
-      expect(getPlayStoreInfo).not.toHaveBeenCalled();
+      expect(searchPlayStoreAppById).not.toHaveBeenCalled();
 
       expect(result.name).toBe('Test App');
       expect(result.repository).toBe('owner/test-repo');
@@ -312,10 +312,10 @@ describe('Data Merger Module', () => {
 
       getRepositoryInfo.mockResolvedValue(mockRepositoryData);
       getLatestRelease.mockResolvedValue(releaseWithIsoDate);
-      getMilestone.mockResolvedValue(null);
-      getRecentPRs.mockResolvedValue([]);
+      getCurrentMilestone.mockResolvedValue(null);
+      getRecentPullRequests.mockResolvedValue([]);
       searchAppById.mockResolvedValue(null);
-      getPlayStoreInfo.mockResolvedValue(null);
+      searchPlayStoreAppById.mockResolvedValue(null);
 
       const result = await mergeAppData(mockRepoConfig);
 
@@ -325,10 +325,10 @@ describe('Data Merger Module', () => {
     it('should select best icon in priority order', async () => {
       getRepositoryInfo.mockResolvedValue(mockRepositoryData);
       getLatestRelease.mockResolvedValue(null);
-      getMilestone.mockResolvedValue(null);
-      getRecentPRs.mockResolvedValue([]);
+      getCurrentMilestone.mockResolvedValue(null);
+      getRecentPullRequests.mockResolvedValue([]);
       searchAppById.mockResolvedValue(mockItunesData);
-      getPlayStoreInfo.mockResolvedValue(mockPlayStoreData);
+      searchPlayStoreAppById.mockResolvedValue(mockPlayStoreData);
 
       // Test config icon priority
       const configWithIcon = {
@@ -350,10 +350,10 @@ describe('Data Merger Module', () => {
     it('should handle empty PR data correctly', async () => {
       getRepositoryInfo.mockResolvedValue(mockRepositoryData);
       getLatestRelease.mockResolvedValue(null);
-      getMilestone.mockResolvedValue(null);
-      getRecentPRs.mockResolvedValue(null); // null instead of []
+      getCurrentMilestone.mockResolvedValue(null);
+      getRecentPullRequests.mockResolvedValue(null); // null instead of []
       searchAppById.mockResolvedValue(null);
-      getPlayStoreInfo.mockResolvedValue(null);
+      searchPlayStoreAppById.mockResolvedValue(null);
 
       const result = await mergeAppData(mockRepoConfig);
 
@@ -373,10 +373,10 @@ describe('Data Merger Module', () => {
 
       getRepositoryInfo.mockResolvedValue(mockRepositoryData);
       getLatestRelease.mockResolvedValue(null);
-      getMilestone.mockResolvedValue(null);
-      getRecentPRs.mockResolvedValue(prWithMergedAt);
+      getCurrentMilestone.mockResolvedValue(null);
+      getRecentPullRequests.mockResolvedValue(prWithMergedAt);
       searchAppById.mockResolvedValue(null);
-      getPlayStoreInfo.mockResolvedValue(null);
+      searchPlayStoreAppById.mockResolvedValue(null);
 
       const result = await mergeAppData(mockRepoConfig);
 

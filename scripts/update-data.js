@@ -84,7 +84,77 @@ try {
   logger.info(
     `Starting update process for ${config.repositories.length} repositories...`
   );
-  logger.success('Basic CLI structure initialized successfully');
+
+  // Start main processing workflow
+  const startTime = Date.now();
+  await processAllApps(config, options, logger);
+  const endTime = Date.now();
+  const duration = Math.round(((endTime - startTime) / 1000) * 100) / 100;
+
+  logger.success(`Update completed in ${duration}s`);
 } catch (error) {
   handleError(error, logger);
+}
+
+/**
+ * Main processing workflow for all apps
+ * @param {object} config - Configuration object
+ * @param {object} options - CLI options
+ * @param {object} logger - Logger instance
+ */
+async function processAllApps(config, options, logger) {
+  const { mergeAppData } = await import('./lib/data-merger.js');
+  const { writeAppsJson } = await import('./lib/json-writer.js');
+
+  // Process all apps in parallel with error handling
+  logger.info('Processing all apps in parallel...');
+
+  const results = await Promise.allSettled(
+    config.repositories.map(async (repoConfig) => {
+      logger.verbose(`Processing ${repoConfig.repository}...`);
+      const appData = await mergeAppData(repoConfig);
+      logger.verbose(`✓ Completed ${repoConfig.repository}`);
+      return appData;
+    })
+  );
+
+  // Collect successful results and log errors
+  const successfulApps = [];
+  const failedApps = [];
+
+  results.forEach((result, index) => {
+    const repoConfig = config.repositories[index];
+    if (result.status === 'fulfilled') {
+      successfulApps.push(result.value);
+    } else {
+      failedApps.push({
+        repository: repoConfig.repository,
+        error: result.reason.message,
+      });
+      logger.error(
+        `Failed to process ${repoConfig.repository}: ${result.reason.message}`
+      );
+    }
+  });
+
+  // Log processing summary
+  logger.info(`Successfully processed: ${successfulApps.length}`);
+  if (failedApps.length > 0) {
+    logger.warn(`Failed to process: ${failedApps.length}`);
+  }
+
+  // Write output file if we have any successful apps
+  if (successfulApps.length > 0) {
+    if (!options.dryRun) {
+      const outputPath = config.outputPath || 'src/data/apps.json';
+      await writeAppsJson(successfulApps, outputPath, logger);
+    } else {
+      logger.info('Dry run mode - skipping file write');
+      logger.info(
+        `Would write ${successfulApps.length} apps to ${config.outputPath || 'src/data/apps.json'}`
+      );
+    }
+  } else {
+    throw new CLIError('No apps were successfully processed');
+  }
 }

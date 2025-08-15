@@ -4,10 +4,10 @@
 
 import { getRepositoryInfo } from './repository.js';
 import { getLatestRelease } from './releases.js';
-import { getMilestone } from './milestones.js';
-import { getRecentPRs } from './pull-requests.js';
+import { getCurrentMilestone } from './milestones.js';
+import { getRecentPullRequests } from './pull-requests.js';
 import { searchAppById } from './itunes-api.js';
-import { getPlayStoreInfo } from './play-store.js';
+import { searchAppById as searchPlayStoreAppById } from './play-store.js';
 
 /**
  * Merge app data from multiple API sources
@@ -36,8 +36,8 @@ export async function mergeAppData(repoConfig, apiResults = {}) {
     const releaseData =
       apiResults.release || (await getLatestRelease(owner, repo));
     const milestoneData =
-      apiResults.milestone || (await getMilestone(owner, repo));
-    const prData = apiResults.prs || (await getRecentPRs(owner, repo));
+      apiResults.milestone || (await getCurrentMilestone(owner, repo));
+    const prData = apiResults.prs || (await getRecentPullRequests(owner, repo));
     const itunesData =
       apiResults.itunes ||
       (repoConfig.appStoreId
@@ -46,7 +46,7 @@ export async function mergeAppData(repoConfig, apiResults = {}) {
     const playStoreData =
       apiResults.playStore ||
       (repoConfig.playStoreId
-        ? await getPlayStoreInfo(repoConfig.playStoreId)
+        ? await searchPlayStoreAppById(repoConfig.playStoreId)
         : null);
 
     // Map and normalize all data
