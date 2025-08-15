@@ -172,16 +172,65 @@ interface Config {
 
 ### データ更新コマンド
 
-#### 全アプリの更新
+#### 基本的な実行
 
 ```bash
+# すべてのリポジトリのデータを更新
 bun run update
 ```
 
-#### 特定アプリの更新
+#### オプション付きでの実行例
 
 ```bash
-bun run update:app <app-id>
+# 詳細ログ付きで実行（推奨：問題調査時）
+bun run update --verbose
+
+# カスタム設定ファイルを使用
+bun run update --config path/to/custom-config.json
+
+# テスト実行（データ取得はするがファイル保存しない）
+bun run update --dry-run
+
+# デバッグ用（詳細ログ + テスト実行）
+bun run update --verbose --dry-run
+
+# 本番用カスタム設定での実行
+bun run update --config production-config.json --verbose
+```
+
+#### 実行時の出力例
+
+##### 通常実行
+
+```bash
+$ bun run update
+[INFO] App Dashboard Data Updater
+[INFO] Version: 1.0.0
+[INFO] Starting update process for 3 repositories...
+[INFO] Processing all apps in parallel...
+[INFO] Successfully processed: 3
+[SUCCESS] Update completed in 12.45s
+```
+
+##### Verbose実行
+
+```bash
+$ bun run update --verbose
+[INFO] App Dashboard Data Updater
+[INFO] Version: 1.0.0
+[VERBOSE] Command line options: { verbose: true, config: 'config.json', dryRun: false }
+[VERBOSE] Loaded configuration from config.json
+[VERBOSE] Configuration: { "repositories": [...], "outputPath": "src/data/apps.json" }
+[INFO] Starting update process for 3 repositories...
+[INFO] Processing all apps in parallel...
+[VERBOSE] Processing owner/repo1...
+[VERBOSE] ✓ Completed owner/repo1
+[VERBOSE] Processing owner/repo2...
+[VERBOSE] ✓ Completed owner/repo2
+[INFO] Successfully processed: 2
+[WARN] Failed to process: 1
+[ERROR] Failed to process owner/repo3: API rate limit exceeded
+[SUCCESS] Update completed in 15.23s
 ```
 
 ### オプション
