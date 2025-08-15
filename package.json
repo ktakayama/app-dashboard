@@ -4,6 +4,9 @@
   "type": "module",
   "description": "Mobile app development dashboard for monitoring multiple GitHub repositories",
   "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
     "update": "bun scripts/update-data.js",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -12,16 +15,21 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@types/node": "^24.3.0",
     "commander": "^12.0.0",
     "eslint": "^9.33.0",
     "globals": "^16.3.0",
     "prettier": "^3.6.2",
+    "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   },
   "engines": {
     "bun": ">=1.0.0"
   },
   "dependencies": {
-    "google-play-scraper": "^10.0.1"
+    "@astrojs/svelte": "^7.1.0",
+    "astro": "^5.13.0",
+    "google-play-scraper": "^10.0.1",
+    "svelte": "^5.38.1"
   }
 }
