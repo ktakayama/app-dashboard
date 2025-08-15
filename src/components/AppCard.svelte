@@ -7,42 +7,42 @@
   export let app: App;
 </script>
 
-<div class="app-card">
+<div class="bg-white rounded-lg p-5 shadow-card flex flex-col gap-4">
   <!-- App Header Section -->
-  <div class="app-header">
+  <div class="flex items-center gap-4">
     <img
       src={app.icon}
       alt="{app.name} Icon"
-      class="app-icon"
+      class="w-16 h-16 rounded-icon bg-gray-300 object-cover"
     />
-    <div class="app-info">
-      <div class="app-name">{app.name}</div>
-      <div class="app-meta">
+    <div class="flex-1">
+      <div class="text-lg font-semibold mb-1 text-gray-900">{app.name}</div>
+      <div class="flex items-center gap-2.5">
         <PlatformBadge platform={app.platform} />
-        <span class="repository-name">{app.repository}</span>
+        <span class="text-gray-500 text-xs">{app.repository}</span>
       </div>
     </div>
   </div>
 
   <!-- Version Section -->
-  <div class="version-section">
+  <div class="p-4 bg-gray-100 rounded-md">
     {#if app.latestRelease}
-      <div class="version-row">
-        <span class="version-label">GitHub Latest:</span>
+      <div class="flex justify-between items-start mb-2 text-sm gap-2.5">
+        <span class="text-gray-500 font-medium min-w-28">GitHub Latest:</span>
         <span><strong>{app.latestRelease.version}</strong> ({app.latestRelease.date})</span>
       </div>
     {/if}
     {#if app.storeVersions && (app.storeVersions.appStore || app.storeVersions.playStore)}
-      <div class="version-row">
-        <span class="version-label">Store Versions:</span>
-        <div class="store-versions">
+      <div class="flex justify-between items-start text-sm gap-2.5">
+        <span class="text-gray-500 font-medium min-w-28">Store Versions:</span>
+        <div class="flex flex-col gap-1 text-xs">
           {#if app.storeVersions.appStore}
-            <span class="store-version-item">
+            <span class="flex items-center gap-1">
               📱 App Store: <strong>{app.storeVersions.appStore}</strong>
             </span>
           {/if}
           {#if app.storeVersions.playStore}
-            <span class="store-version-item">
+            <span class="flex items-center gap-1">
               🤖 Play Store: <strong>{app.storeVersions.playStore}</strong>
             </span>
           {/if}
@@ -55,190 +55,36 @@
   <ProgressBar milestone={app.milestone} />
 
   <!-- Pull Requests Section -->
-  <div class="pr-section">
-    <div class="pr-title">📝 Recent Pull Requests</div>
+  <div class="bg-gray-50 p-4 rounded-md">
+    <div class="text-sm font-semibold mb-2.5 text-gray-900">📝 Recent Pull Requests</div>
     {#if app.recentPRs && app.recentPRs.length > 0}
-      <ul class="pr-list">
+      <ul class="list-none m-0 p-0 flex flex-col gap-1">
         {#each app.recentPRs as pr}
           <PRStateLabel state={pr.state} prNumber={pr.number} title={pr.title} />
         {/each}
       </ul>
     {:else}
-      <ul class="pr-list">
-        <li class="pr-item no-prs">No recent pull requests</li>
+      <ul class="list-none m-0 p-0">
+        <li class="p-3 bg-gray-100 rounded text-gray-500 italic text-center text-xs">No recent pull requests</li>
       </ul>
     {/if}
   </div>
 
   <!-- Links Section -->
-  <div class="links-section">
-    <a href={app.links.github} class="link-button primary" target="_blank" rel="noopener">
+  <div class="flex gap-2.5">
+    <a href={app.links.github} class="flex-1 py-2.5 px-4 text-center no-underline rounded-md text-sm font-medium transition-all duration-200 border border-transparent bg-primary-600 text-white hover:bg-primary-700" target="_blank" rel="noopener">
       GitHub
     </a>
     {#if app.links.appStore}
-      <a href={app.links.appStore} class="link-button secondary" target="_blank" rel="noopener">
+      <a href={app.links.appStore} class="flex-1 py-2.5 px-4 text-center no-underline rounded-md text-sm font-medium transition-all duration-200 border bg-gray-100 text-gray-900 border-gray-300 hover:bg-gray-200 hover:border-gray-400" target="_blank" rel="noopener">
         App Store
       </a>
     {/if}
     {#if app.links.playStore}
-      <a href={app.links.playStore} class="link-button secondary" target="_blank" rel="noopener">
+      <a href={app.links.playStore} class="flex-1 py-2.5 px-4 text-center no-underline rounded-md text-sm font-medium transition-all duration-200 border bg-gray-100 text-gray-900 border-gray-300 hover:bg-gray-200 hover:border-gray-400" target="_blank" rel="noopener">
         Play Store
       </a>
     {/if}
   </div>
 </div>
 
-<style>
-  .app-card {
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .app-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
-
-  .app-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
-    background: #ddd;
-    object-fit: cover;
-  }
-
-  .app-info {
-    flex: 1;
-  }
-
-  .app-name {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 5px;
-    color: #172b4d;
-  }
-
-  .app-meta {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .repository-name {
-    color: #6b778c;
-    font-size: 12px;
-  }
-
-  .version-section {
-    padding: 15px;
-    background: #f4f5f7;
-    border-radius: 6px;
-  }
-
-  .version-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 8px;
-    font-size: 14px;
-    gap: 10px;
-  }
-
-  .version-row:last-child {
-    margin-bottom: 0;
-  }
-
-  .version-label {
-    color: #6b778c;
-    font-weight: 500;
-    min-width: 110px;
-  }
-
-  .store-versions {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 13px;
-  }
-
-  .store-version-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .pr-section {
-    background: #fafbfc;
-    padding: 15px;
-    border-radius: 6px;
-  }
-
-  .pr-title {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: #172b4d;
-  }
-
-  .pr-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .pr-item.no-prs {
-    padding: 12px;
-    background: #f4f5f7;
-    border-radius: 4px;
-    color: #6b778c;
-    font-style: italic;
-    text-align: center;
-    font-size: 13px;
-  }
-
-  .links-section {
-    display: flex;
-    gap: 10px;
-  }
-
-  .link-button {
-    flex: 1;
-    padding: 10px 16px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
-  }
-
-  .link-button.primary {
-    background: #0052cc;
-    color: white;
-  }
-
-  .link-button.primary:hover {
-    background: #0747a6;
-  }
-
-  .link-button.secondary {
-    background: #f4f5f7;
-    color: #172b4d;
-    border-color: #dfe1e6;
-  }
-
-  .link-button.secondary:hover {
-    background: #ebecf0;
-    border-color: #c1c7d0;
-  }
-</style>
