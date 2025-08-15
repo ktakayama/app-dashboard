@@ -49,13 +49,15 @@ bun add astro @astrojs/svelte @astrojs/tailwind
       "owner": "username",
       "repo": "ios-app",
       "appName": "iOS Application",
-      "platforms": ["ios"]
+      "platforms": ["ios"],
+      "appStoreId": "123456789"
     },
     {
       "owner": "username",
       "repo": "flutter-app",
       "appName": "Flutter App",
-      "platforms": ["ios", "android"]
+      "platforms": ["ios", "android"],
+      "appStoreId": "123456789"
     },
     {
       "owner": "username",
