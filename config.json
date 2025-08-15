@@ -1,8 +1,7 @@
 {
   "repositories": [
     {
-      "owner": "example",
-      "repo": "sample-app",
+      "repository": "example/sample-app",
       "appName": "Sample Application",
       "platforms": ["ios", "android"],
       "appStoreId": "123456789",

@@ -46,30 +46,26 @@ bun add astro @astrojs/svelte @astrojs/tailwind
 {
   "repositories": [
     {
-      "owner": "username",
-      "repo": "ios-app",
+      "repository": "username/ios-app",
       "appName": "iOS Application",
       "platforms": ["ios"],
       "appStoreId": "123456789"
     },
     {
-      "owner": "username",
-      "repo": "flutter-app",
+      "repository": "username/flutter-app",
       "appName": "Flutter App",
       "platforms": ["ios", "android"],
       "appStoreId": "123456789",
       "packageId": "com.username.flutterapp"
     },
     {
-      "owner": "username",
-      "repo": "android-app",
+      "repository": "username/android-app",
       "appName": "Android Application",
       "platforms": ["android"],
       "packageId": "com.username.androidapp"
     }
   ],
-  "outputPath": "src/data/apps.json",
-  "itunesSearchUrl": "https://itunes.apple.com/search"
+  "outputPath": "src/data/apps.json"
 }
 ```
 
