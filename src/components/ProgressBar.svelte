@@ -5,7 +5,12 @@
 </script>
 
 {#if milestone}
-  <div class="mb-4">
+  <a 
+    href={milestone.url} 
+    target="_blank" 
+    rel="noopener noreferrer"
+    class="block mb-4 cursor-pointer hover:bg-gray-50 p-2 rounded-md transition-colors duration-200"
+  >
     <div class="text-sm font-semibold mb-2">🎯 Milestone: {milestone.title}</div>
     <div class="bg-gray-200 h-2 rounded overflow-hidden">
       <div 
@@ -16,7 +21,7 @@
     <div class="text-xs text-gray-500 mt-1">
       {milestone.closedIssues} closed / {milestone.totalIssues} total issues ({milestone.progress}%)
     </div>
-  </div>
+  </a>
 {:else}
   <div class="mb-4">
     <div class="text-sm font-semibold mb-2">🎯 Milestone: No active milestone</div>

@@ -159,6 +159,7 @@ function mapMilestoneData(milestoneInfo) {
     closedIssues: milestoneInfo.closedIssues,
     totalIssues: milestoneInfo.totalIssues,
     progress: milestoneInfo.progress,
+    url: milestoneInfo.url,
   };
 }
 
