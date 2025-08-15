@@ -44,39 +44,25 @@ bun add astro @astrojs/svelte @astrojs/tailwind
 
 ```json
 {
-  "apps": [
+  "repositories": [
     {
-      "id": "app1",
-      "name": "My iOS App",
-      "repository": "username/ios-app",
-      "platform": "ios",
-      "links": {
-        "github": "https://github.com/username/ios-app",
-        "appStore": "https://apps.apple.com/jp/app/my-app/id123456789"
-      }
+      "owner": "username",
+      "repo": "ios-app",
+      "platforms": ["ios"]
     },
     {
-      "id": "app2",
-      "name": "My Flutter App",
-      "repository": "username/flutter-app",
-      "platform": "both",
-      "links": {
-        "github": "https://github.com/username/flutter-app",
-        "appStore": "https://apps.apple.com/jp/app/my-app/id123456789",
-        "playStore": "https://play.google.com/store/apps/details?id=com.example.app"
-      }
+      "owner": "username",
+      "repo": "flutter-app",
+      "platforms": ["ios", "android"]
     },
     {
-      "id": "app3",
-      "name": "My Android App",
-      "repository": "username/android-app",
-      "platform": "android",
-      "links": {
-        "github": "https://github.com/username/android-app",
-        "playStore": "https://play.google.com/store/apps/details?id=com.example.app"
-      }
+      "owner": "username",
+      "repo": "android-app",
+      "platforms": ["android"]
     }
-  ]
+  ],
+  "outputPath": "src/data/apps.json",
+  "itunesSearchUrl": "https://itunes.apple.com/search"
 }
 ```
 
