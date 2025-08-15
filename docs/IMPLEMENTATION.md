@@ -48,16 +48,19 @@ bun add astro @astrojs/svelte @astrojs/tailwind
     {
       "owner": "username",
       "repo": "ios-app",
+      "appName": "iOS Application",
       "platforms": ["ios"]
     },
     {
       "owner": "username",
       "repo": "flutter-app",
+      "appName": "Flutter App",
       "platforms": ["ios", "android"]
     },
     {
       "owner": "username",
       "repo": "android-app",
+      "appName": "Android Application",
       "platforms": ["android"]
     }
   ],
