@@ -100,72 +100,34 @@ describe('Repository Module', () => {
   });
 
   describe('getAppName', () => {
-    it('should extract app name from package.json', async () => {
-      const mockPackageJson = {
-        content: Buffer.from(
-          JSON.stringify({ displayName: 'My App' })
-        ).toString('base64'),
-      };
-
-      ghAPI.mockResolvedValueOnce(mockPackageJson);
-
-      const result = await getAppName('owner', 'test-repo', 'fallback');
-
-      expect(ghAPI).toHaveBeenCalledWith('repos/owner/test-repo/contents/package.json');
-      expect(result).toBe('My App');
+    it('should return app name from config', () => {
+      const result = getAppName('My Application', 'fallback');
+      expect(result).toBe('My Application');
     });
 
-    it('should extract app name from pubspec.yaml', async () => {
-      const mockPubspec = {
-        content: Buffer.from('name: flutter_app\nversion: 1.0.0').toString('base64'),
-      };
-
-      ghAPI.mockRejectedValueOnce(new Error('Not found'));
-      ghAPI.mockResolvedValueOnce(mockPubspec);
-
-      const result = await getAppName('owner', 'test-repo', 'fallback');
-
-      expect(result).toBe('flutter_app');
-    });
-
-    it('should extract app name from app.json', async () => {
-      const mockAppJson = {
-        content: Buffer.from(
-          JSON.stringify({ expo: { name: 'Expo App' } })
-        ).toString('base64'),
-      };
-
-      ghAPI.mockRejectedValueOnce(new Error('Not found'));
-      ghAPI.mockRejectedValueOnce(new Error('Not found'));
-      ghAPI.mockResolvedValueOnce(mockAppJson);
-
-      const result = await getAppName('owner', 'test-repo', 'fallback');
-
-      expect(result).toBe('Expo App');
-    });
-
-    it('should use fallback name when no app name is found', async () => {
-      ghAPI.mockRejectedValue(new Error('Not found'));
-
-      const result = await getAppName('owner', 'test-repo', 'fallback');
-
+    it('should use fallback when app name is not provided', () => {
+      const result = getAppName('', 'fallback');
       expect(result).toBe('fallback');
     });
 
-    it('should use repo name when no fallback is provided', async () => {
-      ghAPI.mockRejectedValue(new Error('Not found'));
-
-      const result = await getAppName('owner', 'test-repo');
-
-      expect(result).toBe('test-repo');
+    it('should use fallback when app name is null', () => {
+      const result = getAppName(null, 'fallback');
+      expect(result).toBe('fallback');
     });
 
-    it('should handle missing parameters', async () => {
-      const result = await getAppName('', 'repo', 'fallback');
+    it('should use fallback when app name is whitespace only', () => {
+      const result = getAppName('   ', 'fallback');
       expect(result).toBe('fallback');
+    });
 
-      const result2 = await getAppName('owner', '');
-      expect(result2).toBe('unknown');
+    it('should return unknown when no app name and no fallback', () => {
+      const result = getAppName('', '');
+      expect(result).toBe('unknown');
+    });
+
+    it('should return unknown when both are null', () => {
+      const result = getAppName(null, null);
+      expect(result).toBe('unknown');
     });
   });
 });
