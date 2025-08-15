@@ -135,6 +135,7 @@ interface PullRequest {
    ```bash
    bun run build
    ```
+
    - ミニファイ
    - ツリーシェイキング
    - アセット最適化
@@ -155,4 +156,3 @@ bun run preview
 ```
 
 ※ ローカル環境でのみ使用するため、デプロイは不要です。
-
