@@ -2,7 +2,7 @@
 import type { AppsData } from "../types/app";
 import { promises as fs } from "fs";
 import path from "path";
-import LastUpdated from "../components/LastUpdated.astro";
+import Header from "../components/Header.svelte";
 import AppCard from "../components/AppCard.svelte";
 import "../styles/global.css";
 
@@ -36,15 +36,11 @@ try {
   </head>
   <body>
     <main>
-      <header class="header">
-        <h1>🚀 App Development Dashboard</h1>
-        {appsData && (
-          <div class="flex items-center gap-5 mt-2">
-            <LastUpdated lastUpdated={appsData.lastUpdated} />
-            <span class="text-gray-600 text-sm">アプリ数: {appsData.apps.length}</span>
-          </div>
-        )}
-      </header>
+      <Header 
+        lastUpdated={appsData?.lastUpdated} 
+        appCount={appsData?.apps.length}
+        client:load
+      />
       
       {error ? (
         <div class="p-5 bg-error-50 border border-error-200 rounded m-5">
