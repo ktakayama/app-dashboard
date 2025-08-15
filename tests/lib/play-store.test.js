@@ -6,7 +6,6 @@ import { describe, it, expect } from 'vitest';
 import {
   searchAppById,
   formatPlayStoreInfo,
-  getManualPlayStoreInfo,
 } from '../../scripts/lib/play-store.js';
 
 describe('Play Store API', () => {
@@ -34,20 +33,6 @@ describe('Play Store API', () => {
       playStoreUrl: null,
       version: null,
       packageId: null,
-    });
-  });
-
-  it('should return manual play store info', () => {
-    const packageId = 'com.example.app';
-    const config = { manualVersion: '2.0.0' };
-
-    const result = getManualPlayStoreInfo(packageId, config);
-
-    expect(result).toEqual({
-      playStoreUrl:
-        'https://play.google.com/store/apps/details?id=com.example.app',
-      version: '2.0.0',
-      packageId: 'com.example.app',
     });
   });
 

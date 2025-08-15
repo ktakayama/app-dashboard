@@ -51,25 +51,3 @@ export function formatPlayStoreInfo(playStoreData) {
     packageId: playStoreData.appId || null,
   };
 }
-
-/**
- * Get manual Play Store info from config when API fails
- * @param {string} packageId - Android package ID
- * @param {object} config - Configuration object containing manual values
- * @returns {object} Manual Play Store information
- */
-export function getManualPlayStoreInfo(packageId, config) {
-  if (!packageId || !config) {
-    return {
-      playStoreUrl: null,
-      version: null,
-      packageId: packageId || null,
-    };
-  }
-
-  return {
-    playStoreUrl: `https://play.google.com/store/apps/details?id=${packageId}`,
-    version: config.manualVersion || null,
-    packageId,
-  };
-}
