@@ -168,90 +168,178 @@ interface Config {
 }
 ```
 
-## CLI コマンド
-
-### データ更新コマンド
-
-#### 全アプリの更新
-
-```bash
-bun run update
-```
-
-#### 特定アプリの更新
-
-```bash
-bun run update:app <app-id>
-```
-
-### オプション
-
-| オプション   | 説明                           | 例           |
-| ------------ | ------------------------------ | ------------ |
-| `--app <id>` | 特定のアプリIDのみ更新         | `--app app1` |
-| `--verbose`  | 詳細なログを出力               | `--verbose`  |
-| `--dry-run`  | 実際の更新を行わずにテスト実行 | `--dry-run`  |
-
 ## App Store 情報の取得
 
 ### iTunes Search API
 
-App Storeのバージョン情報はiTunes Search APIを使用して取得します。
+App StoreのバージョンやアイコンはiTunes Search APIから取得します。
 
-#### エンドポイント
+## Google Play Store 情報の取得
 
-```
-GET https://itunes.apple.com/lookup?id={app-id}
-```
+### Google Play Scraper
 
-#### App IDの取得方法
+Google Playのバージョンやアイコンはgoogle-play-scraperライブラリから取得します。
 
-App Store URLからIDを抽出：
+- スクレイピングベースのため、仕様変更により動作しなくなる可能性があります
+- エラーハンドリングが重要（アプリが見つからない場合等）
+- 日本語ロケール（`lang: 'ja'`, `country: 'jp'`）で取得
 
-```
-https://apps.apple.com/jp/app/[app-name]/id6446930619
-                                            ^^^^^^^^^
-                                            この部分がApp ID
-```
+## エラーハンドリングシステム
 
-#### CLIでの実行例
+### CLIError クラス
 
-```bash
-curl https://itunes.apple.com/lookup?id=6446930619 | jq -r '.results[].version'
-```
+カスタムエラークラスを使用してCLI特有のエラーを管理します。
 
-#### レスポンス例
-
-```json
-{
-  "resultCount": 1,
-  "results": [
-    {
-      "version": "1.2.3",
-      "trackName": "App Name",
-      "bundleId": "com.example.app",
-      "artworkUrl60": "https://is1-ssl.mzstatic.com/image/thumb/.../60x60bb.jpg",
-      "artworkUrl100": "https://is1-ssl.mzstatic.com/image/thumb/.../100x100bb.jpg",
-      "artworkUrl512": "https://is1-ssl.mzstatic.com/image/thumb/.../512x512bb.jpg",
-      "releaseDate": "2024-08-10T07:00:00Z",
-      "currentVersionReleaseDate": "2024-08-10T07:00:00Z",
-      "releaseNotes": "リリースノート"
-    }
-  ]
+```javascript
+export class CLIError extends Error {
+  constructor(message, code = 1) {
+    super(message);
+    this.name = 'CLIError';
+    this.code = code;
+  }
 }
 ```
 
-#### 取得できる情報
+#### 使用例
 
-- `version`: 現在のバージョン
-- `artworkUrl60/100/512`: アイコン画像のURL（サイズ別）
-- `trackName`: アプリ名
-- `bundleId`: Bundle ID
-- `releaseDate`: 初回リリース日
-- `currentVersionReleaseDate`: 現バージョンのリリース日
+```javascript
+// 設定ファイルが見つからない場合
+if (!existsSync(configPath)) {
+  throw new CLIError(`Configuration file not found at ${configPath}`);
+}
 
-#### 注意事項
+// JSON解析エラー
+try {
+  config = JSON.parse(configContent);
+} catch (error) {
+  throw new CLIError(`Failed to parse configuration file: ${error.message}`);
+}
+```
 
-- iTunes Search APIは公式APIで、認証不要
-- レート制限は緩やかで、通常の使用では問題になりません
-- スクレイピングよりも安定して動作します
+### エラーハンドラー
+
+#### 統一エラー処理
+
+```javascript
+export function handleError(error, logger) {
+  if (error instanceof CLIError) {
+    logger.error(error.message);
+    process.exit(error.code);
+  } else if (error instanceof Error) {
+    logger.error(`Unexpected error: ${error.message}`);
+    if (logger.isVerbose) {
+      logger.error(error.stack);
+    }
+    process.exit(1);
+  } else {
+    logger.error(`Unknown error: ${error}`);
+    process.exit(1);
+  }
+}
+```
+
+#### グローバル例外キャッチ
+
+```javascript
+export function setupGlobalErrorHandlers(logger) {
+  process.on('uncaughtException', (error) => {
+    logger.error('Uncaught exception:', error.message);
+    if (logger.isVerbose) {
+      logger.error(error.stack);
+    }
+    process.exit(1);
+  });
+
+  process.on('unhandledRejection', (reason, promise) => {
+    logger.error('Unhandled rejection at:', promise, 'reason:', reason);
+    process.exit(1);
+  });
+}
+```
+
+## ログシステム
+
+### Logger クラス
+
+階層化されたログレベルを提供します。
+
+```javascript
+export class Logger {
+  constructor(verbose = false) {
+    this.isVerbose = verbose;
+  }
+
+  info(message, ...args) {
+    console.log(`[INFO] ${message}`, ...args);
+  }
+
+  verbose(message, ...args) {
+    if (this.isVerbose) {
+      console.log(`[VERBOSE] ${message}`, ...args);
+    }
+  }
+
+  warn(message, ...args) {
+    console.warn(`[WARN] ${message}`, ...args);
+  }
+
+  error(message, ...args) {
+    console.error(`[ERROR] ${message}`, ...args);
+  }
+
+  success(message, ...args) {
+    console.log(`[SUCCESS] ${message}`, ...args);
+  }
+}
+```
+
+### ログレベル
+
+| レベル    | 用途                                     | 表示条件         |
+| --------- | ---------------------------------------- | ---------------- |
+| `INFO`    | 一般的な処理状況の報告                   | 常時表示         |
+| `VERBOSE` | 詳細な処理内容やデバッグ情報             | --verbose 時のみ |
+| `WARN`    | 警告（処理は継続するが注意が必要な状況） | 常時表示         |
+| `ERROR`   | エラー（処理が失敗した場合）             | 常時表示         |
+| `SUCCESS` | 処理完了や成功の報告                     | 常時表示         |
+
+### 使用例
+
+```javascript
+// ロガーの初期化
+const logger = createLogger(options.verbose);
+
+// 各種ログの出力
+logger.info('App Dashboard Data Updater');
+logger.verbose('Command line options:', options);
+logger.warn(`Failed to process ${failedApps.length}`);
+logger.error('Configuration file not found');
+logger.success(`Update completed in ${duration}s`);
+```
+
+### 実装での活用
+
+#### 並列処理でのエラー管理
+
+```javascript
+const results = await Promise.allSettled(
+  config.repositories.map(async (repoConfig) => {
+    logger.verbose(`Processing ${repoConfig.repository}...`);
+    const appData = await mergeAppData(repoConfig);
+    logger.verbose(`✓ Completed ${repoConfig.repository}`);
+    return appData;
+  })
+);
+
+// 成功・失敗の結果を分離
+results.forEach((result, index) => {
+  const repoConfig = config.repositories[index];
+  if (result.status === 'fulfilled') {
+    successfulApps.push(result.value);
+  } else {
+    logger.error(
+      `Failed to process ${repoConfig.repository}: ${result.reason.message}`
+    );
+  }
+});
+```

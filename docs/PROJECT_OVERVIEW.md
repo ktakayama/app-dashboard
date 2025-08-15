@@ -50,7 +50,7 @@
   - マイルストーン進捗（`gh api repos/{owner}/{repo}/milestones`）
   - プルリクエストステータス（`gh pr list`、`gh pr view`）
   - App Storeバージョン・アイコン（iTunes Search API）
-  - Google Playバージョン（今後実装予定/Flutterプロジェクトの場合のみ）
+  - Google Playバージョン・アイコン（Google Play Scraper）
 - 手動実行のCLIコマンド
 
 ### 補足事項
