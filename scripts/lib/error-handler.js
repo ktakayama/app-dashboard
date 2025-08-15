@@ -16,7 +16,7 @@ export function handleError(error, logger) {
     process.exit(error.code);
   } else if (error instanceof Error) {
     logger.error(`Unexpected error: ${error.message}`);
-    if (logger.verbose) {
+    if (logger.isVerbose) {
       logger.error(error.stack);
     }
     process.exit(1);
@@ -29,7 +29,7 @@ export function handleError(error, logger) {
 export function setupGlobalErrorHandlers(logger) {
   process.on('uncaughtException', (error) => {
     logger.error('Uncaught exception:', error.message);
-    if (logger.verbose) {
+    if (logger.isVerbose) {
       logger.error(error.stack);
     }
     process.exit(1);
