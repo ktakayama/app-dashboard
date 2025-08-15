@@ -17,7 +17,7 @@
         "url": "https://github.com/ktakayama/todo-ios/releases/tag/v2.1.0"
       },
       "storeVersions": {
-        "appStore": "v2.0.5"
+        "appStore": "2.0.5"
       },
       "milestone": {
         "title": "v2.2.0 - Winter Update",
@@ -66,8 +66,8 @@
         "url": "https://github.com/ktakayama/weather-flutter/releases/tag/v1.5.2"
       },
       "storeVersions": {
-        "appStore": "v1.5.0",
-        "playStore": "v1.5.1"
+        "appStore": "1.5.0",
+        "playStore": "1.5.1"
       },
       "milestone": {
         "title": "v1.6.0 - UI Refresh",
