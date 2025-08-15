@@ -9,24 +9,40 @@ import { ghAPI } from './github-cli.js';
  * @param {string} owner - Repository owner
  * @param {string} repo - Repository name
  * @returns {Promise<object>} Repository information
+ * @throws {Error} If repository cannot be accessed
  */
 export async function getRepositoryInfo(owner, repo) {
-  const endpoint = `repos/${owner}/${repo}`;
-  const data = await ghAPI(endpoint);
+  if (!owner || !repo) {
+    throw new Error('Repository owner and name are required');
+  }
   
-  return {
-    name: data.name,
-    fullName: data.full_name,
-    description: data.description,
-    defaultBranch: data.default_branch,
-    language: data.language,
-    topics: data.topics || [],
-    createdAt: data.created_at,
-    updatedAt: data.updated_at,
-    url: data.html_url,
-    owner: data.owner.login,
-    private: data.private,
-  };
+  try {
+    const endpoint = `repos/${owner}/${repo}`;
+    const data = await ghAPI(endpoint);
+    
+    if (!data || !data.name) {
+      throw new Error(`Invalid repository data for ${owner}/${repo}`);
+    }
+    
+    return {
+      name: data.name,
+      fullName: data.full_name,
+      description: data.description || '',
+      defaultBranch: data.default_branch || 'main',
+      language: data.language || null,
+      topics: data.topics || [],
+      createdAt: data.created_at,
+      updatedAt: data.updated_at,
+      url: data.html_url,
+      owner: data.owner.login,
+      private: data.private || false,
+    };
+  } catch (error) {
+    if (error.message.includes('gh command failed')) {
+      throw new Error(`Failed to access repository ${owner}/${repo}: ${error.message}`);
+    }
+    throw error;
+  }
 }
 
 /**
@@ -104,6 +120,25 @@ function extractFromAppJson(content) {
  * @returns {Promise<string>} App name
  */
 export async function getAppName(owner, repo, fallbackName) {
-  // TODO: Implement app name extraction from package.json, pubspec.yaml, etc.
+  if (!owner || !repo) {
+    return fallbackName || 'unknown';
+  }
+  
+  const filesToCheck = [
+    { path: 'package.json', parser: extractFromPackageJson },
+    { path: 'pubspec.yaml', parser: extractFromPubspec },
+    { path: 'app.json', parser: extractFromAppJson },
+  ];
+  
+  for (const { path, parser } of filesToCheck) {
+    const content = await getFileContent(owner, repo, path);
+    if (content) {
+      const appName = parser(content);
+      if (appName) {
+        return appName;
+      }
+    }
+  }
+  
   return fallbackName || repo;
 }
