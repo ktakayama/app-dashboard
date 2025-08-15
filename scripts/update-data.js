@@ -68,8 +68,8 @@ try {
     const configContent = readFileSync(configPath, 'utf-8');
     config = JSON.parse(configContent);
 
-    logger.verbose(`Loaded configuration from ${configPath}`);
     if (options.verbose) {
+      logger.verbose(`Loaded configuration from ${configPath}`);
       logger.verbose('Configuration:', JSON.stringify(config, null, 2));
     }
   } catch (error) {
