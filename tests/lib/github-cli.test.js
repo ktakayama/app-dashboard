@@ -7,17 +7,17 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 // Mock child_process before importing the module
 vi.mock('child_process', () => ({
   spawn: vi.fn(),
-  execSync: vi.fn()
+  execSync: vi.fn(),
 }));
 
 import { spawn } from 'child_process';
-import { 
-  executeGH, 
-  ghAPI, 
+import {
+  executeGH,
+  ghAPI,
   ghRepo,
   GitHubAuthError,
   GitHubRateLimitError,
-  GitHubNetworkError
+  GitHubNetworkError,
 } from '../../scripts/lib/github-cli.js';
 
 describe('GitHub CLI Wrapper', () => {
@@ -30,7 +30,7 @@ describe('GitHub CLI Wrapper', () => {
       const mockChild = {
         stdout: { on: vi.fn() },
         stderr: { on: vi.fn() },
-        on: vi.fn()
+        on: vi.fn(),
       };
 
       spawn.mockReturnValue(mockChild);
@@ -49,19 +49,23 @@ describe('GitHub CLI Wrapper', () => {
       });
 
       const promise = executeGH(['api', 'user']);
-      
+
       // Wait for promise to resolve
       const result = await promise;
-      
+
       expect(result).toBe('test output');
-      expect(spawn).toHaveBeenCalledWith('gh', ['api', 'user'], expect.any(Object));
+      expect(spawn).toHaveBeenCalledWith(
+        'gh',
+        ['api', 'user'],
+        expect.any(Object)
+      );
     });
 
     it('should handle authentication errors', async () => {
       const mockChild = {
         stdout: { on: vi.fn() },
         stderr: { on: vi.fn() },
-        on: vi.fn()
+        on: vi.fn(),
       };
 
       spawn.mockReturnValue(mockChild);
@@ -85,7 +89,7 @@ describe('GitHub CLI Wrapper', () => {
       const mockChild = {
         stdout: { on: vi.fn() },
         stderr: { on: vi.fn() },
-        on: vi.fn()
+        on: vi.fn(),
       };
 
       spawn.mockReturnValue(mockChild);
@@ -102,14 +106,16 @@ describe('GitHub CLI Wrapper', () => {
         }
       });
 
-      await expect(executeGH(['api', 'user'])).rejects.toThrow(GitHubRateLimitError);
+      await expect(executeGH(['api', 'user'])).rejects.toThrow(
+        GitHubRateLimitError
+      );
     });
 
     it('should handle network errors', async () => {
       const mockChild = {
         stdout: { on: vi.fn() },
         stderr: { on: vi.fn() },
-        on: vi.fn()
+        on: vi.fn(),
       };
 
       spawn.mockReturnValue(mockChild);
@@ -126,7 +132,9 @@ describe('GitHub CLI Wrapper', () => {
         }
       });
 
-      await expect(executeGH(['api', 'user'])).rejects.toThrow(GitHubNetworkError);
+      await expect(executeGH(['api', 'user'])).rejects.toThrow(
+        GitHubNetworkError
+      );
     });
   });
 
@@ -135,13 +143,13 @@ describe('GitHub CLI Wrapper', () => {
       const mockChild = {
         stdout: { on: vi.fn() },
         stderr: { on: vi.fn() },
-        on: vi.fn()
+        on: vi.fn(),
       };
 
       spawn.mockReturnValue(mockChild);
 
       const jsonResponse = { login: 'testuser', id: 123 };
-      
+
       mockChild.stdout.on.mockImplementation((event, callback) => {
         if (event === 'data') {
           callback(JSON.stringify(jsonResponse));
@@ -155,16 +163,20 @@ describe('GitHub CLI Wrapper', () => {
       });
 
       const result = await ghAPI('user');
-      
+
       expect(result).toEqual(jsonResponse);
-      expect(spawn).toHaveBeenCalledWith('gh', ['api', 'user'], expect.any(Object));
+      expect(spawn).toHaveBeenCalledWith(
+        'gh',
+        ['api', 'user'],
+        expect.any(Object)
+      );
     });
 
     it('should add method parameter when provided', async () => {
       const mockChild = {
         stdout: { on: vi.fn() },
         stderr: { on: vi.fn() },
-        on: vi.fn()
+        on: vi.fn(),
       };
 
       spawn.mockReturnValue(mockChild);
@@ -182,8 +194,12 @@ describe('GitHub CLI Wrapper', () => {
       });
 
       await ghAPI('repos/owner/repo', { method: 'POST' });
-      
-      expect(spawn).toHaveBeenCalledWith('gh', ['api', 'repos/owner/repo', '--method', 'POST'], expect.any(Object));
+
+      expect(spawn).toHaveBeenCalledWith(
+        'gh',
+        ['api', 'repos/owner/repo', '--method', 'POST'],
+        expect.any(Object)
+      );
     });
   });
 
@@ -192,13 +208,13 @@ describe('GitHub CLI Wrapper', () => {
       const mockChild = {
         stdout: { on: vi.fn() },
         stderr: { on: vi.fn() },
-        on: vi.fn()
+        on: vi.fn(),
       };
 
       spawn.mockReturnValue(mockChild);
 
       const jsonResponse = [{ tag_name: 'v1.0.0' }];
-      
+
       mockChild.stdout.on.mockImplementation((event, callback) => {
         if (event === 'data') {
           callback(JSON.stringify(jsonResponse));
@@ -212,16 +228,20 @@ describe('GitHub CLI Wrapper', () => {
       });
 
       const result = await ghRepo('owner', 'repo', 'release');
-      
+
       expect(result).toEqual(jsonResponse);
-      expect(spawn).toHaveBeenCalledWith('gh', ['release', '--repo', 'owner/repo', '--json'], expect.any(Object));
+      expect(spawn).toHaveBeenCalledWith(
+        'gh',
+        ['release', '--repo', 'owner/repo', '--json'],
+        expect.any(Object)
+      );
     });
 
     it('should add limit and state options when provided', async () => {
       const mockChild = {
         stdout: { on: vi.fn() },
         stderr: { on: vi.fn() },
-        on: vi.fn()
+        on: vi.fn(),
       };
 
       spawn.mockReturnValue(mockChild);
@@ -239,9 +259,19 @@ describe('GitHub CLI Wrapper', () => {
       });
 
       await ghRepo('owner', 'repo', 'pr', { limit: 10, state: 'open' });
-      
-      expect(spawn).toHaveBeenCalledWith('gh', 
-        ['pr', '--repo', 'owner/repo', '--json', '--limit', '10', '--state', 'open'], 
+
+      expect(spawn).toHaveBeenCalledWith(
+        'gh',
+        [
+          'pr',
+          '--repo',
+          'owner/repo',
+          '--json',
+          '--limit',
+          '10',
+          '--state',
+          'open',
+        ],
         expect.any(Object)
       );
     });
@@ -250,13 +280,13 @@ describe('GitHub CLI Wrapper', () => {
       const mockChild = {
         stdout: { on: vi.fn() },
         stderr: { on: vi.fn() },
-        on: vi.fn()
+        on: vi.fn(),
       };
 
       spawn.mockReturnValue(mockChild);
 
       const textResponse = 'Repository cloned successfully';
-      
+
       mockChild.stdout.on.mockImplementation((event, callback) => {
         if (event === 'data') {
           callback(textResponse);
@@ -270,7 +300,7 @@ describe('GitHub CLI Wrapper', () => {
       });
 
       const result = await ghRepo('owner', 'repo', 'clone');
-      
+
       expect(result).toBe(textResponse);
     });
   });

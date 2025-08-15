@@ -3,7 +3,7 @@
  * Provides unified interface for executing gh commands with error handling and retry logic
  */
 
-import { execSync, spawn } from 'child_process';
+import { spawn } from 'child_process';
 import { CLIError } from './error-handler.js';
 
 /**
@@ -11,7 +11,10 @@ import { CLIError } from './error-handler.js';
  */
 export class GitHubAuthError extends CLIError {
   constructor(message) {
-    super(`Authentication required: ${message}. Please run 'gh auth login'`, 401);
+    super(
+      `Authentication required: ${message}. Please run 'gh auth login'`,
+      401
+    );
     this.name = 'GitHubAuthError';
   }
 }
@@ -39,22 +42,33 @@ export class GitHubNetworkError extends CLIError {
  */
 function createGitHubError(stderr, code) {
   const errorMsg = stderr.toLowerCase();
-  
-  if (errorMsg.includes('authentication') || errorMsg.includes('token') || code === 4) {
+
+  if (
+    errorMsg.includes('authentication') ||
+    errorMsg.includes('token') ||
+    code === 4
+  ) {
     return new GitHubAuthError(stderr);
   }
-  
-  if (errorMsg.includes('rate limit') || errorMsg.includes('api rate limit exceeded')) {
+
+  if (
+    errorMsg.includes('rate limit') ||
+    errorMsg.includes('api rate limit exceeded')
+  ) {
     // Try to extract reset time if available
     const resetMatch = stderr.match(/try again in (\d+)/);
     const resetTime = resetMatch ? parseInt(resetMatch[1]) : null;
     return new GitHubRateLimitError(stderr, resetTime);
   }
-  
-  if (errorMsg.includes('network') || errorMsg.includes('connection') || errorMsg.includes('timeout')) {
+
+  if (
+    errorMsg.includes('network') ||
+    errorMsg.includes('connection') ||
+    errorMsg.includes('timeout')
+  ) {
     return new GitHubNetworkError(stderr);
   }
-  
+
   return new CLIError(`gh command failed: ${stderr}`, code);
 }
 
@@ -64,7 +78,7 @@ function createGitHubError(stderr, code) {
  * @returns {Promise<void>}
  */
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
@@ -77,7 +91,7 @@ function sleep(ms) {
 async function executeGHWithRetry(args, options = {}, retryCount = 0) {
   const maxRetries = options.maxRetries || 3;
   const baseDelay = options.baseDelay || 1000;
-  
+
   try {
     return await executeGHRaw(args, options);
   } catch (error) {
@@ -85,20 +99,24 @@ async function executeGHWithRetry(args, options = {}, retryCount = 0) {
     if (error instanceof GitHubAuthError) {
       throw error;
     }
-    
+
     // Retry network errors and rate limit errors
-    if ((error instanceof GitHubNetworkError || error instanceof GitHubRateLimitError) && retryCount < maxRetries) {
+    if (
+      (error instanceof GitHubNetworkError ||
+        error instanceof GitHubRateLimitError) &&
+      retryCount < maxRetries
+    ) {
       let delay = baseDelay * Math.pow(2, retryCount);
-      
+
       // For rate limit errors, use the reset time if available
       if (error instanceof GitHubRateLimitError && error.resetTime) {
         delay = Math.max(delay, error.resetTime * 1000);
       }
-      
+
       await sleep(delay);
       return executeGHWithRetry(args, options, retryCount + 1);
     }
-    
+
     throw error;
   }
 }
@@ -113,7 +131,7 @@ function executeGHRaw(args, options = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn('gh', args, {
       stdio: ['pipe', 'pipe', 'pipe'],
-      ...options
+      ...options,
     });
 
     let stdout = '';
@@ -159,12 +177,12 @@ export async function executeGH(args, options = {}) {
  */
 export async function ghAPI(endpoint, options = {}) {
   const args = ['api', endpoint];
-  
+
   // Add common options
   if (options.method) {
     args.push('--method', options.method);
   }
-  
+
   try {
     const output = await executeGH(args, options);
     return JSON.parse(output);
@@ -179,36 +197,39 @@ export async function ghAPI(endpoint, options = {}) {
 /**
  * Repository-specific operations
  * @param {string} owner - Repository owner
- * @param {string} repo - Repository name  
+ * @param {string} repo - Repository name
  * @param {string} subcommand - Subcommand to execute
  * @param {object} options - Command options
  * @returns {Promise<object>} Command result
  */
 export async function ghRepo(owner, repo, subcommand, options = {}) {
   const args = [subcommand, '--repo', `${owner}/${repo}`];
-  
+
   // Add JSON output for common commands that support it
-  if (['release', 'pr', 'issue'].includes(subcommand) && !args.includes('--json')) {
+  if (
+    ['release', 'pr', 'issue'].includes(subcommand) &&
+    !args.includes('--json')
+  ) {
     args.push('--json');
   }
-  
+
   // Add additional options
   if (options.limit) {
     args.push('--limit', options.limit.toString());
   }
-  
+
   if (options.state) {
     args.push('--state', options.state);
   }
-  
+
   try {
     const output = await executeGH(args, options);
-    
+
     // Try to parse as JSON if it looks like JSON
     if (output.trim().startsWith('{') || output.trim().startsWith('[')) {
       return JSON.parse(output);
     }
-    
+
     return output;
   } catch (error) {
     if (error instanceof CLIError) {

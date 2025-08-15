@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import globals from 'globals';
 
 export default [
   js.configs.recommended,
@@ -7,6 +8,7 @@ export default [
       ecmaVersion: 2022,
       sourceType: 'module',
       globals: {
+        ...globals.browser,
         console: 'readonly',
         process: 'readonly',
         Buffer: 'readonly',
