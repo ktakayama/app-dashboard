@@ -3,31 +3,18 @@
   export let lastUpdated: string | undefined = undefined;
   export let appCount: number | undefined = undefined;
 
-  function formatToJST(dateString: string): string {
+  function formatDate(dateString: string): string {
     const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
     
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZone: 'Asia/Tokyo',
-      hour12: false
-    };
-    
-    const formatter = new Intl.DateTimeFormat('ja-JP', options);
-    const parts = formatter.formatToParts(date);
-    
-    const dateParts: { [key: string]: string } = {};
-    parts.forEach(part => {
-      dateParts[part.type] = part.value;
-    });
-    
-    return `${dateParts.year}年${dateParts.month}月${dateParts.day}日 ${dateParts.hour}:${dateParts.minute} JST`;
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
   }
 
-  $: formattedDate = lastUpdated ? formatToJST(lastUpdated) : undefined;
+  $: formattedDate = lastUpdated ? formatDate(lastUpdated) : undefined;
 </script>
 
 <header class="header">
