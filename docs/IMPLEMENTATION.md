@@ -31,12 +31,38 @@ bun add astro @astrojs/svelte @astrojs/tailwind
 
 - GitHub CLI（`gh`）経由でのデータ取得
 - iTunes Search APIでのApp Store情報取得
+- Google Play ScrapeでのGoogle Play情報取得
+- 包括的なエラーハンドリングとログ機能
+- 並列処理によるデータ取得最適化
 - JSONファイルへのデータ保存
 
-### 実装するファイル
+### ファイル構造
 
-- `scripts/update-data.js` - メイン更新スクリプト（GitHub CLI使用）
-- `scripts/store-api.js` - ストアAPI操作
+#### メインスクリプト
+
+- `scripts/update-data.js` - CLI エントリーポイント（Commander.js使用）
+
+#### モジュール (`scripts/lib/`)
+
+- `data-merger.js` - アプリデータの統合処理
+- `error-handler.js` - エラーハンドリングとグローバル例外処理
+- `github-cli.js` - GitHub CLI ラッパー関数
+- `itunes-api.js` - iTunes Search API 統合
+- `json-writer.js` - JSON ファイル書き込み処理
+- `logger.js` - ログ出力機能（verboseレベル対応）
+- `milestones.js` - GitHub マイルストーン取得
+- `play-store.js` - Google Play Store データ取得
+- `pull-requests.js` - GitHub プルリクエスト取得
+- `releases.js` - GitHub リリース情報取得
+- `repository.js` - GitHub リポジトリ基本情報取得
+
+### 実装パターン
+
+各モジュールは以下のパターンで実装：
+- エラーハンドリング統一
+- Promise ベースの非同期処理
+- モジュール化された単一責任の関数
+- 詳細ログ出力対応
 
 ## 設定ファイル
 
