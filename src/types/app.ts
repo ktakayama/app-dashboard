@@ -12,7 +12,7 @@ export interface Milestone {
   closedIssues: number;
   totalIssues: number;
   progress: number;
-  url?: string;
+  url: string;
 }
 
 export interface Release {
