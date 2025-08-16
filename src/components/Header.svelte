@@ -22,9 +22,7 @@
   {#if lastUpdated || appCount}
     <div class="flex items-center gap-5 mt-2">
       {#if formattedDate}
-        <div
-          class="inline-flex items-center gap-2 px-2 py-2 bg-gray-100 rounded text-xs"
-        >
+        <div class="inline-flex items-center gap-2 px-2 py-2 bg-gray-100 rounded text-xs">
           <span class="font-semibold text-gray-600">Updated:</span>
           <time datetime={lastUpdated} class="text-gray-800">
             {formattedDate}

@@ -1,25 +1,25 @@
 <script lang="ts">
   export let platform: 'ios' | 'android' | 'both';
-  
+
   // Platform-specific styling configuration
   const platformStyles = {
     ios: {
       bg: 'bg-blue-50',
       text: 'text-blue-700',
-      label: 'iOS'
+      label: 'iOS',
     },
     android: {
-      bg: 'bg-green-50', 
+      bg: 'bg-green-50',
       text: 'text-green-700',
-      label: 'Android'
+      label: 'Android',
     },
     both: {
       bg: 'bg-purple-50',
-      text: 'text-purple-700', 
-      label: 'iOS & Android'
-    }
+      text: 'text-purple-700',
+      label: 'iOS & Android',
+    },
   };
-  
+
   $: currentStyle = platformStyles[platform];
 </script>
 

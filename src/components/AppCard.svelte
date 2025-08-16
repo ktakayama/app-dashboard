@@ -65,26 +65,42 @@
       </ul>
     {:else}
       <ul class="list-none m-0 p-0">
-        <li class="p-3 bg-gray-100 rounded text-gray-500 italic text-center text-xs">No recent pull requests</li>
+        <li class="p-3 bg-gray-100 rounded text-gray-500 italic text-center text-xs">
+          No recent pull requests
+        </li>
       </ul>
     {/if}
   </div>
 
   <!-- Links Section -->
   <div class="flex gap-2.5">
-    <a href={app.links.github} class="flex-1 py-1.5 px-3 text-center no-underline rounded-md text-sm font-medium transition-all duration-200 border border-transparent bg-primary-600 text-white hover:bg-primary-700" target="_blank" rel="noopener">
+    <a
+      href={app.links.github}
+      class="flex-1 py-1.5 px-3 text-center no-underline rounded-md text-sm font-medium transition-all duration-200 border border-transparent bg-primary-600 text-white hover:bg-primary-700"
+      target="_blank"
+      rel="noopener"
+    >
       GitHub
     </a>
     {#if app.links.appStore}
-      <a href={app.links.appStore} class="flex-1 py-1.5 px-3 text-center no-underline rounded-md text-sm font-medium transition-all duration-200 border bg-gray-100 text-gray-900 border-gray-300 hover:bg-gray-200 hover:border-gray-400" target="_blank" rel="noopener">
+      <a
+        href={app.links.appStore}
+        class="flex-1 py-1.5 px-3 text-center no-underline rounded-md text-sm font-medium transition-all duration-200 border bg-gray-100 text-gray-900 border-gray-300 hover:bg-gray-200 hover:border-gray-400"
+        target="_blank"
+        rel="noopener"
+      >
         App Store
       </a>
     {/if}
     {#if app.links.playStore}
-      <a href={app.links.playStore} class="flex-1 py-1.5 px-3 text-center no-underline rounded-md text-sm font-medium transition-all duration-200 border bg-gray-100 text-gray-900 border-gray-300 hover:bg-gray-200 hover:border-gray-400" target="_blank" rel="noopener">
+      <a
+        href={app.links.playStore}
+        class="flex-1 py-1.5 px-3 text-center no-underline rounded-md text-sm font-medium transition-all duration-200 border bg-gray-100 text-gray-900 border-gray-300 hover:bg-gray-200 hover:border-gray-400"
+        target="_blank"
+        rel="noopener"
+      >
         Play Store
       </a>
     {/if}
   </div>
 </div>
-
