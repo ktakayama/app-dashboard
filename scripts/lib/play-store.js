@@ -23,10 +23,7 @@ export async function searchAppById(packageId) {
 
     return formatPlayStoreInfo(appData);
   } catch (error) {
-    console.warn(
-      `Failed to search app by package ID "${packageId}":`,
-      error.message
-    );
+    console.warn(`Failed to search app by package ID "${packageId}":`, error.message);
     return null;
   }
 }

@@ -1,20 +1,21 @@
 <script lang="ts">
   import type { Milestone } from '../types/app.js';
 
+  export let github: string | null = null;
   export let milestone: Milestone | null = null;
 </script>
 
 {#if milestone}
-  <a 
-    href={milestone.url} 
-    target="_blank" 
+  <a
+    href={milestone.url}
+    target="_blank"
     rel="noopener noreferrer"
-    class="block mb-4 cursor-pointer hover:bg-gray-50 p-2 rounded-md transition-colors duration-200"
+    class="block mb-0 cursor-pointer hover:bg-gray-50 p-2 rounded-md transition-colors duration-200"
   >
     <div class="text-sm font-semibold mb-2">🎯 Milestone: {milestone.title}</div>
     <div class="bg-gray-200 h-2 rounded overflow-hidden">
-      <div 
-        class="bg-success-500 h-full transition-all duration-300 ease-in-out" 
+      <div
+        class="bg-success-500 h-full transition-all duration-300 ease-in-out"
         style="width: {milestone.progress}%"
       ></div>
     </div>
@@ -23,11 +24,19 @@
     </div>
   </a>
 {:else}
-  <div class="mb-4">
+  <a
+    href="{github}/milestones"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="block mb-0 cursor-pointer hover:bg-gray-50 p-2 rounded-md transition-colors duration-200"
+  >
     <div class="text-sm font-semibold mb-2">🎯 Milestone: No active milestone</div>
     <div class="bg-gray-200 h-2 rounded overflow-hidden">
-      <div class="bg-success-500 h-full transition-all duration-300 ease-in-out" style="width: 0%"></div>
+      <div
+        class="bg-success-500 h-full transition-all duration-300 ease-in-out"
+        style="width: 0%"
+      ></div>
     </div>
     <div class="text-xs text-gray-500 mt-1">No milestone set</div>
-  </div>
+  </a>
 {/if}

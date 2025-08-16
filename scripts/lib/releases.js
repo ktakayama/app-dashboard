@@ -40,9 +40,7 @@ export async function getLatestRelease(owner, repo) {
  */
 export async function getReleases(owner, repo, limit = 5) {
   try {
-    const releases = await ghAPI(
-      `repos/${owner}/${repo}/releases?per_page=${limit}`
-    );
+    const releases = await ghAPI(`repos/${owner}/${repo}/releases?per_page=${limit}`);
 
     // Filter out prereleases and format data
     return releases

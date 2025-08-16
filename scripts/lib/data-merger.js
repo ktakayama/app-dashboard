@@ -18,9 +18,7 @@ import { searchAppById as searchPlayStoreAppById } from './play-store.js';
  */
 export async function mergeAppData(repoConfig, apiResults = {}) {
   if (!repoConfig || !repoConfig.repository) {
-    throw new Error(
-      'Repository configuration with repository field is required'
-    );
+    throw new Error('Repository configuration with repository field is required');
   }
 
   try {
@@ -31,23 +29,16 @@ export async function mergeAppData(repoConfig, apiResults = {}) {
     }
 
     // Fetch all required data
-    const repoData =
-      apiResults.repository || (await getRepositoryInfo(owner, repo));
-    const releaseData =
-      apiResults.release || (await getLatestRelease(owner, repo));
-    const milestoneData =
-      apiResults.milestone || (await getCurrentMilestone(owner, repo));
+    const repoData = apiResults.repository || (await getRepositoryInfo(owner, repo));
+    const releaseData = apiResults.release || (await getLatestRelease(owner, repo));
+    const milestoneData = apiResults.milestone || (await getCurrentMilestone(owner, repo));
     const prData = apiResults.prs || (await getRecentPullRequests(owner, repo));
     const itunesData =
       apiResults.itunes ||
-      (repoConfig.appStoreId
-        ? await searchAppById(repoConfig.appStoreId)
-        : null);
+      (repoConfig.appStoreId ? await searchAppById(repoConfig.appStoreId) : null);
     const playStoreData =
       apiResults.playStore ||
-      (repoConfig.playStoreId
-        ? await searchPlayStoreAppById(repoConfig.playStoreId)
-        : null);
+      (repoConfig.playStoreId ? await searchPlayStoreAppById(repoConfig.playStoreId) : null);
 
     // Map and normalize all data
     const mappedRepoData = mapRepositoryData(repoData);
@@ -69,9 +60,7 @@ export async function mergeAppData(repoConfig, apiResults = {}) {
     // Normalize and add timestamp
     return normalizeAppData(appData);
   } catch (error) {
-    throw new Error(
-      `Data merge failed for ${repoConfig.repository}: ${error.message}`
-    );
+    throw new Error(`Data merge failed for ${repoConfig.repository}: ${error.message}`);
   }
 }
 
@@ -187,14 +176,7 @@ function mapPRData(prInfo) {
  * @param {object} mappedData - All mapped data components
  * @returns {object} Complete app data structure
  */
-function createFinalAppData({
-  repository,
-  release,
-  store,
-  milestone,
-  prs,
-  config,
-}) {
+function createFinalAppData({ repository, release, store, milestone, prs, config }) {
   // Determine platform based on store data availability
   const platform = determinePlatform(store, config);
 

@@ -3,10 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import {
-  searchAppById,
-  formatPlayStoreInfo,
-} from '../../scripts/lib/play-store.js';
+import { searchAppById, formatPlayStoreInfo } from '../../scripts/lib/play-store.js';
 
 // Mock the google-play-scraper module
 vi.mock('google-play-scraper', () => ({
@@ -29,8 +26,7 @@ describe('Play Store API', () => {
     const result = formatPlayStoreInfo(mockData);
 
     expect(result).toEqual({
-      playStoreUrl:
-        'https://play.google.com/store/apps/details?id=com.example.app',
+      playStoreUrl: 'https://play.google.com/store/apps/details?id=com.example.app',
       version: '1.0.0',
       packageId: 'com.example.app',
     });

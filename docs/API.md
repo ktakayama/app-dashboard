@@ -337,9 +337,7 @@ results.forEach((result, index) => {
   if (result.status === 'fulfilled') {
     successfulApps.push(result.value);
   } else {
-    logger.error(
-      `Failed to process ${repoConfig.repository}: ${result.reason.message}`
-    );
+    logger.error(`Failed to process ${repoConfig.repository}: ${result.reason.message}`);
   }
 });
 ```

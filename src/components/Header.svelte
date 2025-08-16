@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let title: string = "🚀 App Development Dashboard";
+  export let title: string = '🚀 App Development Dashboard';
   export let lastUpdated: string | undefined = undefined;
   export let appCount: number | undefined = undefined;
 
@@ -10,7 +10,7 @@
     const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
-    
+
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   }
 
@@ -22,15 +22,12 @@
   {#if lastUpdated || appCount}
     <div class="flex items-center gap-5 mt-2">
       {#if formattedDate}
-        <div class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded text-sm">
-          <span class="font-semibold text-gray-600">最終更新:</span>
+        <div class="inline-flex items-center gap-2 px-2 py-2 bg-gray-100 rounded text-xs">
+          <span class="font-semibold text-gray-600">Updated:</span>
           <time datetime={lastUpdated} class="text-gray-800">
             {formattedDate}
           </time>
         </div>
-      {/if}
-      {#if appCount !== undefined}
-        <span class="text-gray-600 text-sm">アプリ数: {appCount}</span>
       {/if}
     </div>
   {/if}

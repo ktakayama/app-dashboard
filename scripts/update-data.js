@@ -9,25 +9,17 @@ import { readFileSync, existsSync } from 'fs';
 import { join, dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { createLogger } from './lib/logger.js';
-import {
-  CLIError,
-  handleError,
-  setupGlobalErrorHandlers,
-} from './lib/error-handler.js';
+import { CLIError, handleError, setupGlobalErrorHandlers } from './lib/error-handler.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Load package.json for version information
-const packageJson = JSON.parse(
-  readFileSync(join(__dirname, '..', 'package.json'), 'utf-8')
-);
+const packageJson = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf-8'));
 
 // Initialize CLI program
 program
   .name('update-data')
-  .description(
-    'Update app development dashboard data from GitHub and iTunes APIs'
-  )
+  .description('Update app development dashboard data from GitHub and iTunes APIs')
   .version(packageJson.version)
   .option('-v, --verbose', 'enable verbose logging')
   .option('-c, --config <path>', 'path to configuration file', 'config.json')
@@ -81,9 +73,7 @@ try {
     throw new CLIError('Configuration must contain a "repositories" array');
   }
 
-  logger.info(
-    `Starting update process for ${config.repositories.length} repositories...`
-  );
+  logger.info(`Starting update process for ${config.repositories.length} repositories...`);
 
   // Start main processing workflow
   const startTime = Date.now();
@@ -131,9 +121,7 @@ async function processAllApps(config, options, logger) {
         repository: repoConfig.repository,
         error: result.reason.message,
       });
-      logger.error(
-        `Failed to process ${repoConfig.repository}: ${result.reason.message}`
-      );
+      logger.error(`Failed to process ${repoConfig.repository}: ${result.reason.message}`);
     }
   });
 
