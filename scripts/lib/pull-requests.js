@@ -21,12 +21,14 @@ export async function getRecentPullRequests(owner, repo, limit = 3) {
     ]);
 
     // Combine and remove duplicates by PR number
-    const allPRs = [...openPRs, ...mergedPRs, ...closedPRs];
-    const uniquePRs = removeDuplicatePRs(allPRs);
-    const sortedPRs = sortPRsByUpdateTime(uniquePRs);
+    const allPRs = [
+      ...sortPRsByUpdateTime(openPRs),
+      ...sortPRsByUpdateTime(mergedPRs),
+      ...sortPRsByUpdateTime(closedPRs),
+    ];
 
     // Return top N PRs
-    return sortedPRs.slice(0, limit).map(normalizePRState);
+    return allPRs.slice(0, limit).map(normalizePRState);
   } catch (error) {
     console.error(`Failed to get pull requests for ${owner}/${repo}:`, error);
     return [];
@@ -110,22 +112,6 @@ export function normalizePRState(pr) {
     state: pr.state.toLowerCase(),
     mergedAt: pr.mergedAt || null,
   };
-}
-
-/**
- * Remove duplicate PRs by number (keep the first occurrence)
- * @param {object[]} prs - Array of PR objects
- * @returns {object[]} Array of unique PRs
- */
-function removeDuplicatePRs(prs) {
-  const seen = new Set();
-  return prs.filter((pr) => {
-    if (seen.has(pr.number)) {
-      return false;
-    }
-    seen.add(pr.number);
-    return true;
-  });
 }
 
 /**
