@@ -1,60 +1,59 @@
 ---
-import type { AppsData } from "../types/app";
-import { promises as fs } from "fs";
-import path from "path";
-import Header from "../components/Header.svelte";
-import AppCard from "../components/AppCard.svelte";
-import "../styles/global.css";
+import type { AppsData } from '../types/app';
+import { promises as fs } from 'fs';
+import path from 'path';
+import Header from '../components/Header.svelte';
+import AppCard from '../components/AppCard.svelte';
+import '../styles/global.css';
 
 let appsData: AppsData | null = null;
 let error: string | null = null;
 
 try {
-  const dataPath = path.join(process.cwd(), "src", "data", "apps.json");
-  const fileContent = await fs.readFile(dataPath, "utf-8");
+  const dataPath = path.join(process.cwd(), 'src', 'data', 'apps.json');
+  const fileContent = await fs.readFile(dataPath, 'utf-8');
   appsData = JSON.parse(fileContent) as AppsData;
 } catch (e) {
   if (e instanceof Error) {
-    if ("code" in e && e.code === "ENOENT") {
-      error = "データファイルが見つかりません。'bun run update' を実行してデータを生成してください。";
+    if ('code' in e && e.code === 'ENOENT') {
+      error =
+        "データファイルが見つかりません。'bun run update' を実行してデータを生成してください。";
     } else {
       error = `データの読み込みに失敗しました: ${e.message}`;
     }
   } else {
-    error = "予期しないエラーが発生しました。";
+    error = '予期しないエラーが発生しました。';
   }
 }
 ---
 
 <!doctype html>
-<html lang="ja">
+<html lang='ja'>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
     <title>App Dashboard</title>
-    <meta name="description" content="Mobile app development dashboard" />
+    <meta name='description' content='Mobile app development dashboard' />
   </head>
   <body>
     <main>
-      <Header 
-        lastUpdated={appsData?.lastUpdated} 
-        appCount={appsData?.apps.length}
-        client:load
-      />
-      
-      {error ? (
-        <div class="p-5 bg-error-50 border border-error-200 rounded m-5">
-          <strong>エラー:</strong> {error}
-        </div>
-      ) : appsData ? (
-        <div class="apps-grid">
-          {appsData.apps.map((app) => (
-            <AppCard app={app} client:load />
-          ))}
-        </div>
-      ) : (
-        <p>データを読み込み中...</p>
-      )}
+      <Header lastUpdated={appsData?.lastUpdated} appCount={appsData?.apps.length} client:load />
+
+      {
+        error ? (
+          <div class='p-5 bg-error-50 border border-error-200 rounded m-5'>
+            <strong>エラー:</strong> {error}
+          </div>
+        ) : appsData ? (
+          <div class='apps-grid'>
+            {appsData.apps.map((app) => (
+              <AppCard app={app} client:load />
+            ))}
+          </div>
+        ) : (
+          <p>データを読み込み中...</p>
+        )
+      }
     </main>
   </body>
 </html>
