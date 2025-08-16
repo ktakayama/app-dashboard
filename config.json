@@ -2,7 +2,7 @@
   "repositories": [
     {
       "repository": "ktakayama/TadokuLog",
-      "appName": "App DashBoard",
+      "name": "App DashBoard",
       "platforms": ["ios", "android"],
       "appStoreId": "6446930619",
       "playStoreId": "org.aill.tadoku_log"

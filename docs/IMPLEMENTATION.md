@@ -74,20 +74,20 @@ bun add astro @astrojs/svelte @astrojs/tailwind
   "repositories": [
     {
       "repository": "username/ios-app",
-      "appName": "iOS Application",
+      "name": "iOS Application",
       "platforms": ["ios"],
       "appStoreId": "123456789"
     },
     {
       "repository": "username/flutter-app",
-      "appName": "Flutter App",
+      "name": "Flutter App",
       "platforms": ["ios", "android"],
       "appStoreId": "123456789",
       "playStoreId": "com.username.flutterapp"
     },
     {
       "repository": "username/android-app",
-      "appName": "Android Application",
+      "name": "Android Application",
       "platforms": ["android"],
       "playStoreId": "com.username.androidapp"
     }
