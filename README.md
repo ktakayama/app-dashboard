@@ -2,6 +2,8 @@
 
 Mobile app development dashboard for monitoring GitHub repositories.
 
+![screenshot](./docs/images/screenshot.png)
+
 ## Requirements
 
 - [Bun](https://bun.sh/) (>=1.0.0)
