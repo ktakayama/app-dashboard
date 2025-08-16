@@ -19,7 +19,14 @@
       <div class="text-lg font-semibold mb-1 text-gray-900">{app.name}</div>
       <div class="flex items-center gap-2.5">
         <PlatformBadge platform={app.platform} />
-        <span class="text-gray-500 text-xs">{app.repository}</span>
+        <a
+          href={app.links.github}
+          class="text-xs text-gray-500 hover:underline"
+          target="_blank"
+          rel="noopener"
+        >
+          {app.repository}
+        </a>
       </div>
     </div>
   </div>
@@ -74,14 +81,6 @@
 
   <!-- Links Section -->
   <div class="flex gap-2.5">
-    <a
-      href={app.links.github}
-      class="flex-1 py-1.5 px-3 text-center no-underline rounded-md text-sm font-medium transition-all duration-200 border border-transparent bg-primary-600 text-white hover:bg-primary-700"
-      target="_blank"
-      rel="noopener"
-    >
-      GitHub
-    </a>
     {#if app.links.appStore}
       <a
         href={app.links.appStore}
