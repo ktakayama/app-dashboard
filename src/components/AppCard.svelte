@@ -72,7 +72,7 @@
   <ProgressBar github={app.links.github} milestone={app.milestone} />
 
   <!-- Pull Requests Section -->
-  <div class="bg-gray-50 p-4 rounded-md">
+  <div class="bg-gray-100 p-3 rounded-md">
     <div class="text-sm font-semibold mb-2.5 text-gray-900">📝 Recent Pull Requests</div>
     {#if app.recentPRs && app.recentPRs.length > 0}
       <ul class="list-none m-0 p-0 flex flex-col gap-1">
@@ -82,7 +82,7 @@
       </ul>
     {:else}
       <ul class="list-none m-0 p-0">
-        <li class="p-3 bg-gray-100 rounded text-gray-500 italic text-center text-xs">
+        <li class="p-3 bg-gray-50 rounded text-gray-500 italic text-center text-xs">
           No recent pull requests
         </li>
       </ul>

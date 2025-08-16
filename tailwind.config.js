@@ -19,7 +19,7 @@ module.exports = {
         },
         // Gray scale for backgrounds and text
         gray: {
-          50: '#f7f8f9', // Main background
+          50: '#fafbfc', // Main background
           100: '#f4f5f7', // Card background alternative
           200: '#e4e6ea', // Progress bar background
           300: '#ddd', // Placeholder/disabled

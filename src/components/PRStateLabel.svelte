@@ -19,7 +19,7 @@
     href={url}
     target="_blank"
     rel="noopener"
-    class="block p-2 bg-gray-100 rounded mb-1 text-sm hover:bg-gray-200 transition-colors duration-200 text-gray-900 no-underline"
+    class="block p-2 bg-gray-50 rounded mb-1 text-xs hover:bg-gray-200 transition-colors duration-200 text-gray-900 no-underline"
   >
     <span
       class="inline-block px-1.5 py-0.5 rounded text-xs font-semibold uppercase mr-2 {currentStateStyle}"
