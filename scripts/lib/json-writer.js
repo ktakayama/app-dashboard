@@ -14,11 +14,7 @@ import { CLIError } from './error-handler.js';
  * @returns {Promise<void>}
  * @throws {CLIError} If write operation fails
  */
-export async function writeAppsJson(
-  appsData,
-  outputPath = 'src/data/apps.json',
-  logger
-) {
+export async function writeAppsJson(appsData, outputPath = 'src/data/apps.json', logger) {
   if (!Array.isArray(appsData)) {
     throw new CLIError('Apps data must be an array');
   }
@@ -51,9 +47,7 @@ export async function writeAppsJson(
     const stats = await fs.stat(outputPath);
     const fileSizeKB = Math.round((stats.size / 1024) * 100) / 100;
 
-    logger.success(
-      `JSON file written successfully: ${outputPath} (${fileSizeKB} KB)`
-    );
+    logger.success(`JSON file written successfully: ${outputPath} (${fileSizeKB} KB)`);
     logger.success(`Total apps exported: ${appsData.length}`);
   } catch (error) {
     if (error instanceof CLIError) {
@@ -108,9 +102,7 @@ async function ensureDirectory(dirPath) {
   try {
     await fs.mkdir(dirPath, { recursive: true });
   } catch (error) {
-    throw new CLIError(
-      `Failed to create directory ${dirPath}: ${error.message}`
-    );
+    throw new CLIError(`Failed to create directory ${dirPath}: ${error.message}`);
   }
 }
 
@@ -164,9 +156,7 @@ async function verifyJsonOutput(filePath, expectedData, logger) {
     }
 
     if (writtenJson.apps.length !== expectedJson.apps.length) {
-      throw new CLIError(
-        'Written file validation failed: apps array length mismatch'
-      );
+      throw new CLIError('Written file validation failed: apps array length mismatch');
     }
 
     logger.verbose('JSON file verification completed successfully');

@@ -82,10 +82,7 @@ describe('JSON Writer Module', () => {
         expect.stringContaining('"apps"'),
         'utf8'
       );
-      expect(fs.rename).toHaveBeenCalledWith(
-        'src/data/apps.json.tmp',
-        'src/data/apps.json'
-      );
+      expect(fs.rename).toHaveBeenCalledWith('src/data/apps.json.tmp', 'src/data/apps.json');
       expect(mockLogger.success).toHaveBeenCalledWith(
         'JSON file written successfully: src/data/apps.json (1 KB)'
       );
@@ -120,10 +117,7 @@ describe('JSON Writer Module', () => {
         expect.any(String),
         'utf8'
       );
-      expect(fs.rename).toHaveBeenCalledWith(
-        'custom/path/output.json.tmp',
-        customPath
-      );
+      expect(fs.rename).toHaveBeenCalledWith('custom/path/output.json.tmp', customPath);
       expect(mockLogger.success).toHaveBeenCalledWith(
         'JSON file written successfully: custom/path/output.json (2 KB)'
       );
@@ -150,13 +144,8 @@ describe('JSON Writer Module', () => {
 
       await writeAppsJson(mockAppsData, 'test-output.json', mockLogger);
 
-      expect(fs.copyFile).toHaveBeenCalledWith(
-        'test-output.json',
-        'test-output.json.backup'
-      );
-      expect(mockLogger.verbose).toHaveBeenCalledWith(
-        'Backup created: test-output.json.backup'
-      );
+      expect(fs.copyFile).toHaveBeenCalledWith('test-output.json', 'test-output.json.backup');
+      expect(mockLogger.verbose).toHaveBeenCalledWith('Backup created: test-output.json.backup');
     });
 
     it('should handle empty apps array', async () => {
@@ -191,35 +180,31 @@ describe('JSON Writer Module', () => {
       fs.rename.mockRejectedValue(new Error('Rename failed'));
       fs.unlink.mockResolvedValue();
 
-      await expect(
-        writeAppsJson(mockAppsData, 'test-output.json', mockLogger)
-      ).rejects.toThrow(CLIError);
+      await expect(writeAppsJson(mockAppsData, 'test-output.json', mockLogger)).rejects.toThrow(
+        CLIError
+      );
 
       expect(fs.unlink).toHaveBeenCalledWith('test-output.json.tmp');
     });
 
     it('should throw CLIError for invalid apps data', async () => {
-      await expect(
-        writeAppsJson('not-an-array', 'test-output.json', mockLogger)
-      ).rejects.toThrow(CLIError);
+      await expect(writeAppsJson('not-an-array', 'test-output.json', mockLogger)).rejects.toThrow(
+        CLIError
+      );
 
-      await expect(
-        writeAppsJson(null, 'test-output.json', mockLogger)
-      ).rejects.toThrow(CLIError);
+      await expect(writeAppsJson(null, 'test-output.json', mockLogger)).rejects.toThrow(CLIError);
     });
 
     it('should throw CLIError for missing logger', async () => {
-      await expect(
-        writeAppsJson(mockAppsData, 'test-output.json', null)
-      ).rejects.toThrow(CLIError);
+      await expect(writeAppsJson(mockAppsData, 'test-output.json', null)).rejects.toThrow(CLIError);
     });
 
     it('should throw CLIError on directory creation failure', async () => {
       fs.mkdir.mockRejectedValue(new Error('Permission denied'));
 
-      await expect(
-        writeAppsJson(mockAppsData, 'test-output.json', mockLogger)
-      ).rejects.toThrow(CLIError);
+      await expect(writeAppsJson(mockAppsData, 'test-output.json', mockLogger)).rejects.toThrow(
+        CLIError
+      );
     });
 
     it('should throw CLIError on backup creation failure', async () => {
@@ -227,9 +212,9 @@ describe('JSON Writer Module', () => {
       fs.access.mockResolvedValue(); // File exists
       fs.copyFile.mockRejectedValue(new Error('Backup failed'));
 
-      await expect(
-        writeAppsJson(mockAppsData, 'test-output.json', mockLogger)
-      ).rejects.toThrow(CLIError);
+      await expect(writeAppsJson(mockAppsData, 'test-output.json', mockLogger)).rejects.toThrow(
+        CLIError
+      );
     });
 
     it('should throw CLIError on file verification failure', async () => {
@@ -250,9 +235,9 @@ describe('JSON Writer Module', () => {
         )
       );
 
-      await expect(
-        writeAppsJson(mockAppsData, 'test-output.json', mockLogger)
-      ).rejects.toThrow(CLIError);
+      await expect(writeAppsJson(mockAppsData, 'test-output.json', mockLogger)).rejects.toThrow(
+        CLIError
+      );
     });
 
     it('should format JSON with correct structure and indentation', async () => {

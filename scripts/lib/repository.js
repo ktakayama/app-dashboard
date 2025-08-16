@@ -39,9 +39,7 @@ export async function getRepositoryInfo(owner, repo) {
     };
   } catch (error) {
     if (error.message.includes('gh command failed')) {
-      throw new Error(
-        `Failed to access repository ${owner}/${repo}: ${error.message}`
-      );
+      throw new Error(`Failed to access repository ${owner}/${repo}: ${error.message}`);
     }
     throw error;
   }

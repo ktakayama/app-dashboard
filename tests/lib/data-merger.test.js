@@ -105,8 +105,7 @@ describe('Data Merger Module', () => {
   };
 
   const mockPlayStoreData = {
-    playStoreUrl:
-      'https://play.google.com/store/apps/details?id=com.example.testapp',
+    playStoreUrl: 'https://play.google.com/store/apps/details?id=com.example.testapp',
     version: '1.0.0',
     iconUrl: 'https://example.com/play-icon.png',
     minimumSdkVersion: '21',
@@ -132,8 +131,7 @@ describe('Data Merger Module', () => {
         links: {
           github: 'https://github.com/owner/test-repo',
           appStore: 'https://apps.apple.com/app/id123456789',
-          playStore:
-            'https://play.google.com/store/apps/details?id=com.example.testapp',
+          playStore: 'https://play.google.com/store/apps/details?id=com.example.testapp',
         },
         latestRelease: {
           version: 'v1.0.0',
@@ -244,8 +242,7 @@ describe('Data Merger Module', () => {
       expect(result.platform).toBe('android');
       expect(result.links).toEqual({
         github: 'https://github.com/owner/test-repo',
-        playStore:
-          'https://play.google.com/store/apps/details?id=com.example.testapp',
+        playStore: 'https://play.google.com/store/apps/details?id=com.example.testapp',
       });
       expect(result.storeVersions).toEqual({
         playStore: '1.0.0',

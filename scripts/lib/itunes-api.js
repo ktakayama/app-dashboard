@@ -15,9 +15,7 @@ async function fetchFromItunes(url) {
     const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error(
-        `iTunes API request failed: ${response.status} ${response.statusText}`
-      );
+      throw new Error(`iTunes API request failed: ${response.status} ${response.statusText}`);
     }
 
     const data = await response.json();

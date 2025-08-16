@@ -3,10 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import {
-  searchAppById,
-  formatAppStoreInfo,
-} from '../../scripts/lib/itunes-api.js';
+import { searchAppById, formatAppStoreInfo } from '../../scripts/lib/itunes-api.js';
 
 // Mock fetch for testing
 global.fetch = vi.fn();

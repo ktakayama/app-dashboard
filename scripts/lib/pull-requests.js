@@ -61,10 +61,7 @@ async function getPRsByState(owner, repo, state, limit = 5) {
     const output = await executeGH(args);
     return JSON.parse(output);
   } catch (error) {
-    console.error(
-      `Failed to get ${state} PRs for ${owner}/${repo}:`,
-      error.message
-    );
+    console.error(`Failed to get ${state} PRs for ${owner}/${repo}:`, error.message);
     return [];
   }
 }
@@ -91,10 +88,7 @@ export async function getPullRequestDetails(owner, repo, number) {
     const output = await executeGH(args);
     return JSON.parse(output);
   } catch (error) {
-    console.error(
-      `Failed to get PR #${number} for ${owner}/${repo}:`,
-      error.message
-    );
+    console.error(`Failed to get PR #${number} for ${owner}/${repo}:`, error.message);
     return null;
   }
 }
