@@ -69,7 +69,7 @@
   </div>
 
   <!-- Milestone Progress Section -->
-  <ProgressBar milestone={app.milestone} />
+  <ProgressBar github={app.links.github} milestone={app.milestone} />
 
   <!-- Pull Requests Section -->
   <div class="bg-gray-50 p-4 rounded-md">
