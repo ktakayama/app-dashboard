@@ -36,7 +36,14 @@
     {#if app.latestRelease}
       <div class="flex justify-between items-start mb-2 text-sm gap-2.5">
         <span class="text-gray-500 font-medium min-w-28">GitHub Latest:</span>
-        <span><strong>{app.latestRelease.version}</strong> ({app.latestRelease.date})</span>
+        <a
+          href={app.latestRelease.url}
+          class="flex items-center gap-1 hover:underline"
+          target="_blank"
+          rel="noopener"
+        >
+          <strong>{app.latestRelease.version}</strong> ({app.latestRelease.date})
+        </a>
       </div>
     {/if}
     {#if app.storeVersions && (app.storeVersions.appStore || app.storeVersions.playStore)}
