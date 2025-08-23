@@ -8,10 +8,25 @@
       text: 'text-blue-700',
       label: 'iOS',
     },
+    ipados: {
+      bg: 'bg-indigo-50',
+      text: 'text-indigo-700',
+      label: 'iPadOS',
+    },
+    macos: {
+      bg: 'bg-gray-50',
+      text: 'text-gray-700',
+      label: 'macOS',
+    },
     android: {
       bg: 'bg-green-50',
       text: 'text-green-700',
       label: 'Android',
+    },
+    flutter: {
+      bg: 'bg-cyan-50',
+      text: 'text-cyan-700',
+      label: 'Flutter',
     },
   };
 
