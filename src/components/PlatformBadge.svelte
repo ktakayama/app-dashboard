@@ -23,10 +23,12 @@
   };
 
   function getStyleForPlatform(platform: string) {
-    return platformStyles[platform.toLowerCase()] || {
-      ...defaultStyle,
-      label: platform,
-    };
+    return (
+      platformStyles[platform.toLowerCase()] || {
+        ...defaultStyle,
+        label: platform,
+      }
+    );
   }
 </script>
 
