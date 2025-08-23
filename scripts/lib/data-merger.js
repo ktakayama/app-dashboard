@@ -229,28 +229,6 @@ function normalizeAppData(appData) {
 }
 
 /**
- * Determine platform based on available store data
- * @param {object} storeData - Store data object
- * @param {object} config - Repository configuration
- * @returns {string} Platform identifier ('ios', 'android', 'both')
- */
-function determinePlatform(storeData, config) {
-  const hasAppStore = storeData.appStore !== null;
-  const hasPlayStore = storeData.playStore !== null;
-
-  if (hasAppStore && hasPlayStore) {
-    return 'both';
-  } else if (hasAppStore) {
-    return 'ios';
-  } else if (hasPlayStore) {
-    return 'android';
-  }
-
-  // Fallback to config or 'both'
-  return config.platform || 'both';
-}
-
-/**
  * Select the best available icon URL
  * @param {object} storeData - Store data object
  * @param {object} config - Repository configuration
