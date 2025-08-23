@@ -126,7 +126,7 @@ describe('Data Merger Module', () => {
         id: 'test-app',
         name: 'Test App',
         repository: 'owner/test-repo',
-        platform: 'both',
+        platforms: [],
         icon: 'https://example.com/icon-512.png',
         links: {
           github: 'https://github.com/owner/test-repo',
@@ -186,7 +186,7 @@ describe('Data Merger Module', () => {
         id: 'test-repo',
         name: 'test-repo',
         repository: 'owner/test-repo',
-        platform: 'both',
+        platforms: [],
         icon: 'https://via.placeholder.com/60',
         links: {
           github: 'https://github.com/owner/test-repo',
@@ -209,12 +209,13 @@ describe('Data Merger Module', () => {
 
       const iosConfig = {
         repository: 'owner/test-repo',
+        platforms: ['ios'],
         appStoreId: '123456789',
       };
 
       const result = await mergeAppData(iosConfig);
 
-      expect(result.platform).toBe('ios');
+      expect(result.platforms).toEqual(['ios']);
       expect(result.links).toEqual({
         github: 'https://github.com/owner/test-repo',
         appStore: 'https://apps.apple.com/app/id123456789',
@@ -234,12 +235,13 @@ describe('Data Merger Module', () => {
 
       const androidConfig = {
         repository: 'owner/test-repo',
+        platforms: ['android'],
         playStoreId: 'com.example.testapp',
       };
 
       const result = await mergeAppData(androidConfig);
 
-      expect(result.platform).toBe('android');
+      expect(result.platforms).toEqual(['android']);
       expect(result.links).toEqual({
         github: 'https://github.com/owner/test-repo',
         playStore: 'https://play.google.com/store/apps/details?id=com.example.testapp',

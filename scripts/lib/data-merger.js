@@ -177,8 +177,8 @@ function mapPRData(prInfo) {
  * @returns {object} Complete app data structure
  */
 function createFinalAppData({ repository, release, store, milestone, prs, config }) {
-  // Determine platform based on store data availability
-  const platform = determinePlatform(store, config);
+  // Use platforms from config directly
+  const platforms = config.platforms || [];
 
   // Choose the best icon URL
   const iconUrl = selectBestIcon(store, config);
@@ -193,7 +193,7 @@ function createFinalAppData({ repository, release, store, milestone, prs, config
     id: config.id || repository.name.toLowerCase(),
     name: config.name || repository.name,
     repository: repository.fullName,
-    platform,
+    platforms,
     icon: iconUrl,
     links,
     latestRelease: release,
@@ -226,28 +226,6 @@ function normalizeAppData(appData) {
   }
 
   return appData;
-}
-
-/**
- * Determine platform based on available store data
- * @param {object} storeData - Store data object
- * @param {object} config - Repository configuration
- * @returns {string} Platform identifier ('ios', 'android', 'both')
- */
-function determinePlatform(storeData, config) {
-  const hasAppStore = storeData.appStore !== null;
-  const hasPlayStore = storeData.playStore !== null;
-
-  if (hasAppStore && hasPlayStore) {
-    return 'both';
-  } else if (hasAppStore) {
-    return 'ios';
-  } else if (hasPlayStore) {
-    return 'android';
-  }
-
-  // Fallback to config or 'both'
-  return config.platform || 'both';
 }
 
 /**
