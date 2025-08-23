@@ -18,7 +18,7 @@
     <div class="flex-1">
       <div class="text-lg font-semibold mb-1 text-gray-900">{app.name}</div>
       <div class="flex items-center gap-2.5">
-        <PlatformBadge platform={app.platform} />
+        <PlatformBadge platforms={app.platforms} />
         <a
           href={app.links.github}
           class="text-xs text-gray-500 hover:underline"

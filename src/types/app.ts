@@ -25,7 +25,7 @@ export interface App {
   id: string;
   name: string;
   repository: string;
-  platform: 'ios' | 'android' | 'both';
+  platforms: string[];
   icon: string;
   links: {
     github: string;
