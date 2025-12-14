@@ -31,7 +31,7 @@
   "dependencies": {
     "@astrojs/svelte": "^7.1.0",
     "astro": "^5.13.5",
-    "google-play-scraper": "^10.0.1",
+    "google-play-scraper": "^10.1.2",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-svelte": "^3.4.0",
     "svelte": "^5.38.7"

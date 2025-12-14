@@ -6,7 +6,7 @@
       "dependencies": {
         "@astrojs/svelte": "^7.1.0",
         "astro": "^5.13.5",
-        "google-play-scraper": "^10.0.1",
+        "google-play-scraper": "^10.1.2",
         "prettier-plugin-astro": "^0.14.1",
         "prettier-plugin-svelte": "^3.4.0",
         "svelte": "^5.38.7",
@@ -580,7 +580,7 @@
 
     "globals": ["globals@16.3.0", "", {}, "sha512-bqWEnJ1Nt3neqx2q5SFfGS8r/ahumIakg3HcwtNlrVlwXIeNumWn/c7Pn/wKzGhf6SaW6H6uWXLqC30STCMchQ=="],
 
-    "google-play-scraper": ["google-play-scraper@10.0.1", "", { "dependencies": { "cheerio": "^1.0.0-rc.12", "debug": "^3.1.0", "got": "^11.8.6", "memoizee": "^0.4.14", "ramda": "^0.29.0", "tough-cookie": "^4.1.3" } }, "sha512-wF1a7IaN++Pfx9cgqJSJtmeSWvA18H+PSBQmEKzOkG5qtm0EjD+W6aHMGhNiiGNciVkKAYHA8HbmrwH2b183/A=="],
+    "google-play-scraper": ["google-play-scraper@10.1.2", "", { "dependencies": { "cheerio": "^1.0.0-rc.12", "debug": "^3.1.0", "got": "^11.8.6", "memoizee": "^0.4.14", "ramda": "^0.29.0", "tough-cookie": "^4.1.3" } }, "sha512-jDgJlIXc4T785jUyD7qTTZ1i5GrJjZuJ3lxkLiUqQubxDFt669xygoRxiBmeWPRX10SWJt1rK3Mb6psO5y9xCw=="],
 
     "got": ["got@11.8.6", "", { "dependencies": { "@sindresorhus/is": "^4.0.0", "@szmarczak/http-timer": "^4.0.5", "@types/cacheable-request": "^6.0.1", "@types/responselike": "^1.0.0", "cacheable-lookup": "^5.0.3", "cacheable-request": "^7.0.2", "decompress-response": "^6.0.0", "http2-wrapper": "^1.0.0-beta.5.2", "lowercase-keys": "^2.0.0", "p-cancelable": "^2.0.0", "responselike": "^2.0.0" } }, "sha512-6tfZ91bOr7bOXnK7PRDCGBLa1H4U080YHNaAQ2KsMGlLEzRbk44nsZF2E1IeRc3vtJHPVbKCYgdFbaGO2ljd8g=="],
 
