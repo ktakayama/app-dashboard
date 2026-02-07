@@ -22,7 +22,7 @@ async function fetchFromItunes(url) {
     return data;
   } catch (error) {
     if (error instanceof TypeError) {
-      throw new Error(`Network error accessing iTunes API: ${error.message}`);
+      throw new Error(`Network error accessing iTunes API: ${error.message}`, { cause: error });
     }
     throw error;
   }

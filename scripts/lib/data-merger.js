@@ -60,7 +60,9 @@ export async function mergeAppData(repoConfig, apiResults = {}) {
     // Normalize and add timestamp
     return normalizeAppData(appData);
   } catch (error) {
-    throw new Error(`Data merge failed for ${repoConfig.repository}: ${error.message}`);
+    throw new Error(`Data merge failed for ${repoConfig.repository}: ${error.message}`, {
+      cause: error,
+    });
   }
 }
 
