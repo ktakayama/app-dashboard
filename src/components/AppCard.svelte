@@ -4,7 +4,11 @@
   import ProgressBar from './ProgressBar.svelte';
   import PRStateLabel from './PRStateLabel.svelte';
 
-  let { app }: { app: App } = $props();
+  interface Props {
+    app: App;
+  }
+
+  let { app }: Props = $props();
 </script>
 
 <div class="bg-white rounded-lg p-5 shadow-card flex flex-col gap-4">

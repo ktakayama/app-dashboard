@@ -1,13 +1,11 @@
 <script lang="ts">
-  let {
-    title = '🚀 App Development Dashboard',
-    lastUpdated = undefined,
-    appCount = undefined,
-  }: {
+  interface Props {
     title?: string;
-    lastUpdated?: string;
-    appCount?: number;
-  } = $props();
+    lastUpdated?: string | undefined;
+    appCount?: number | undefined;
+  }
+
+  let { title = '🚀 App Development Dashboard', lastUpdated = undefined, appCount = undefined }: Props = $props();
 
   function formatDate(dateString: string): string {
     const date = new Date(dateString);

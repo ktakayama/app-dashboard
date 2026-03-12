@@ -1,10 +1,17 @@
 <script lang="ts">
-  let { state, prNumber, title, url }: {
+  interface Props {
     state: 'open' | 'merged' | 'closed';
     prNumber: number;
     title: string;
     url: string;
-  } = $props();
+  }
+
+  let {
+    state,
+    prNumber,
+    title,
+    url
+  }: Props = $props();
 
   // State styling configuration using TailwindCSS classes
   const stateStyles = {

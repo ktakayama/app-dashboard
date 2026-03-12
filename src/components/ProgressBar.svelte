@@ -1,13 +1,12 @@
 <script lang="ts">
   import type { Milestone } from '../types/app.js';
 
-  let {
-    github = null,
-    milestone = null,
-  }: {
+  interface Props {
     github?: string | null;
     milestone?: Milestone | null;
-  } = $props();
+  }
+
+  let { github = null, milestone = null }: Props = $props();
 </script>
 
 {#if milestone}

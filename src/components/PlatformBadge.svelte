@@ -1,5 +1,9 @@
 <script lang="ts">
-  let { platforms }: { platforms: string[] } = $props();
+  interface Props {
+    platforms: string[];
+  }
+
+  let { platforms }: Props = $props();
 
   // Platform-specific styling configuration
   const platformStyles: Record<string, { bg: string; text: string; label: string }> = {
