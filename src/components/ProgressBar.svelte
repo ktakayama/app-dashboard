@@ -1,8 +1,13 @@
 <script lang="ts">
   import type { Milestone } from '../types/app.js';
 
-  export let github: string | null = null;
-  export let milestone: Milestone | null = null;
+  let {
+    github = null,
+    milestone = null,
+  }: {
+    github?: string | null;
+    milestone?: Milestone | null;
+  } = $props();
 </script>
 
 {#if milestone}

@@ -1,7 +1,13 @@
 <script lang="ts">
-  export let title: string = '🚀 App Development Dashboard';
-  export let lastUpdated: string | undefined = undefined;
-  export let appCount: number | undefined = undefined;
+  let {
+    title = '🚀 App Development Dashboard',
+    lastUpdated = undefined,
+    appCount = undefined,
+  }: {
+    title?: string;
+    lastUpdated?: string;
+    appCount?: number;
+  } = $props();
 
   function formatDate(dateString: string): string {
     const date = new Date(dateString);
@@ -14,7 +20,7 @@
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   }
 
-  $: formattedDate = lastUpdated ? formatDate(lastUpdated) : undefined;
+  const formattedDate = $derived(lastUpdated ? formatDate(lastUpdated) : undefined);
 </script>
 
 <header class="header">
