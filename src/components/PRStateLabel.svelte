@@ -6,12 +6,7 @@
     url: string;
   }
 
-  let {
-    state,
-    prNumber,
-    title,
-    url
-  }: Props = $props();
+  let { state, prNumber, title, url }: Props = $props();
 
   // State styling configuration using TailwindCSS classes
   const stateStyles = {

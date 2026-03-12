@@ -5,7 +5,11 @@
     appCount?: number | undefined;
   }
 
-  let { title = '🚀 App Development Dashboard', lastUpdated = undefined, appCount = undefined }: Props = $props();
+  let {
+    title = '🚀 App Development Dashboard',
+    lastUpdated = undefined,
+    appCount = undefined,
+  }: Props = $props();
 
   function formatDate(dateString: string): string {
     const date = new Date(dateString);
