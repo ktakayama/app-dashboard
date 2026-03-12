@@ -1,8 +1,12 @@
 <script lang="ts">
-  export let state: 'open' | 'merged' | 'closed';
-  export let prNumber: number;
-  export let title: string;
-  export let url: string;
+  interface Props {
+    state: 'open' | 'merged' | 'closed';
+    prNumber: number;
+    title: string;
+    url: string;
+  }
+
+  let { state, prNumber, title, url }: Props = $props();
 
   // State styling configuration using TailwindCSS classes
   const stateStyles = {
@@ -11,7 +15,7 @@
     closed: 'bg-error-500 text-white',
   };
 
-  $: currentStateStyle = stateStyles[state];
+  const currentStateStyle = $derived(stateStyles[state]);
 </script>
 
 <li class="list-none">

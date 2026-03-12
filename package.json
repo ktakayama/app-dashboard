@@ -29,8 +29,8 @@
     "bun": ">=1.0.0"
   },
   "dependencies": {
-    "@astrojs/svelte": "^7.1.0",
-    "astro": "^5.13.5",
+    "@astrojs/svelte": "^8.0.0",
+    "astro": "^6.0.0",
     "google-play-scraper": "^10.1.2",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-svelte": "^3.4.0",
