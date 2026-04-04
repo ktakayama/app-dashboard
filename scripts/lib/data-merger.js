@@ -201,7 +201,15 @@ function mapPRData(prInfo) {
  * @param {object} mappedData - All mapped data components
  * @returns {object} Complete app data structure
  */
-function createFinalAppData({ repository, release, store, milestone, milestoneIssues, prs, config }) {
+function createFinalAppData({
+  repository,
+  release,
+  store,
+  milestone,
+  milestoneIssues,
+  prs,
+  config,
+}) {
   // Use platforms from config directly
   const platforms = config.platforms || [];
 

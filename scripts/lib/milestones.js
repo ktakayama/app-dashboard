@@ -60,7 +60,7 @@ export async function getCurrentMilestone(owner, repo) {
 export async function getMilestoneIssues(owner, repo, milestoneNumber, limit = 3) {
   try {
     const issues = await ghAPI(
-      `repos/${owner}/${repo}/issues?milestone=${milestoneNumber}&state=open&per_page=${limit}&sort=created&direction=desc`,
+      `repos/${owner}/${repo}/issues?milestone=${milestoneNumber}&state=open&per_page=${limit}&sort=created&direction=desc`
     );
 
     return issues.map((issue) => ({
