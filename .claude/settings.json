@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && bun run lint --fix 2>&1 | tail -20; bun run format 2>&1 | tail -20"
+          }
+        ]
+      }
+    ]
+  }
+}
