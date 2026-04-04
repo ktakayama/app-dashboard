@@ -15,6 +15,7 @@ vi.mock('../../scripts/lib/releases.js', () => ({
 
 vi.mock('../../scripts/lib/milestones.js', () => ({
   getCurrentMilestone: vi.fn(),
+  getMilestoneIssues: vi.fn(),
 }));
 
 vi.mock('../../scripts/lib/pull-requests.js', () => ({
@@ -31,7 +32,7 @@ vi.mock('../../scripts/lib/play-store.js', () => ({
 
 import { getRepositoryInfo } from '../../scripts/lib/repository.js';
 import { getLatestRelease } from '../../scripts/lib/releases.js';
-import { getCurrentMilestone } from '../../scripts/lib/milestones.js';
+import { getCurrentMilestone, getMilestoneIssues } from '../../scripts/lib/milestones.js';
 import { getRecentPullRequests } from '../../scripts/lib/pull-requests.js';
 import { searchAppById } from '../../scripts/lib/itunes-api.js';
 import { searchAppById as searchPlayStoreAppById } from '../../scripts/lib/play-store.js';
@@ -74,12 +75,22 @@ describe('Data Merger Module', () => {
   };
 
   const mockMilestoneData = {
+    number: 10,
     title: 'v1.1.0 - Next Release',
     openIssues: 5,
     closedIssues: 10,
     totalIssues: 15,
     progress: 67,
   };
+
+  const mockMilestoneIssuesData = [
+    {
+      number: 100,
+      title: 'Implement feature X',
+      url: 'https://github.com/owner/test-repo/issues/100',
+      state: 'open',
+    },
+  ];
 
   const mockPRData = [
     {
@@ -116,6 +127,7 @@ describe('Data Merger Module', () => {
       getRepositoryInfo.mockResolvedValue(mockRepositoryData);
       getLatestRelease.mockResolvedValue(mockReleaseData);
       getCurrentMilestone.mockResolvedValue(mockMilestoneData);
+      getMilestoneIssues.mockResolvedValue(mockMilestoneIssuesData);
       getRecentPullRequests.mockResolvedValue(mockPRData);
       searchAppById.mockResolvedValue(mockItunesData);
       searchPlayStoreAppById.mockResolvedValue(mockPlayStoreData);
@@ -149,6 +161,14 @@ describe('Data Merger Module', () => {
           totalIssues: 15,
           progress: 67,
         },
+        milestoneIssues: [
+          {
+            number: 100,
+            title: 'Implement feature X',
+            url: 'https://github.com/owner/test-repo/issues/100',
+            state: 'open',
+          },
+        ],
         recentPRs: [
           {
             number: 42,
@@ -194,6 +214,7 @@ describe('Data Merger Module', () => {
         latestRelease: null,
         storeVersions: {},
         milestone: null,
+        milestoneIssues: [],
         recentPRs: [],
         lastUpdated: '2025-01-15T10:30:00.000Z',
       });
@@ -256,6 +277,7 @@ describe('Data Merger Module', () => {
         repository: mockRepositoryData,
         release: mockReleaseData,
         milestone: mockMilestoneData,
+        milestoneIssues: mockMilestoneIssuesData,
         prs: mockPRData,
         itunes: mockItunesData,
         playStore: mockPlayStoreData,

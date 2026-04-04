@@ -50,6 +50,31 @@ export async function getCurrentMilestone(owner, repo) {
 }
 
 /**
+ * Get open issues for a specific milestone
+ * @param {string} owner - Repository owner
+ * @param {string} repo - Repository name
+ * @param {number} milestoneNumber - Milestone number
+ * @param {number} limit - Maximum number of issues to return
+ * @returns {Promise<object[]>} Array of issue objects
+ */
+export async function getMilestoneIssues(owner, repo, milestoneNumber, limit = 3) {
+  try {
+    const issues = await ghAPI(
+      `repos/${owner}/${repo}/issues?milestone=${milestoneNumber}&state=open&per_page=${limit}&sort=created&direction=desc`,
+    );
+
+    return issues.map((issue) => ({
+      number: issue.number,
+      title: issue.title,
+      url: issue.html_url,
+      state: issue.state,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+/**
  * Calculate progress percentage
  * @param {number} openIssues - Number of open issues
  * @param {number} closedIssues - Number of closed issues
@@ -124,6 +149,7 @@ function formatMilestoneData(milestoneData) {
   const totalIssues = openIssues + closedIssues;
 
   return {
+    number: milestoneData.number,
     title: milestoneData.title,
     openIssues,
     closedIssues,

@@ -4,7 +4,7 @@
 
 import { getRepositoryInfo } from './repository.js';
 import { getLatestRelease } from './releases.js';
-import { getCurrentMilestone } from './milestones.js';
+import { getCurrentMilestone, getMilestoneIssues } from './milestones.js';
 import { getRecentPullRequests } from './pull-requests.js';
 import { searchAppById } from './itunes-api.js';
 import { searchAppById as searchPlayStoreAppById } from './play-store.js';
@@ -32,6 +32,9 @@ export async function mergeAppData(repoConfig, apiResults = {}) {
     const repoData = apiResults.repository || (await getRepositoryInfo(owner, repo));
     const releaseData = apiResults.release || (await getLatestRelease(owner, repo));
     const milestoneData = apiResults.milestone || (await getCurrentMilestone(owner, repo));
+    const milestoneIssuesData =
+      apiResults.milestoneIssues ||
+      (milestoneData ? await getMilestoneIssues(owner, repo, milestoneData.number) : []);
     const prData = apiResults.prs || (await getRecentPullRequests(owner, repo));
     const itunesData =
       apiResults.itunes ||
@@ -45,6 +48,7 @@ export async function mergeAppData(repoConfig, apiResults = {}) {
     const mappedReleaseData = mapReleaseData(releaseData);
     const mappedStoreData = mapStoreData(itunesData, playStoreData);
     const mappedMilestoneData = mapMilestoneData(milestoneData);
+    const mappedMilestoneIssuesData = mapMilestoneIssuesData(milestoneIssuesData);
     const mappedPRData = mapPRData(prData);
 
     // Create final app data structure
@@ -53,6 +57,7 @@ export async function mergeAppData(repoConfig, apiResults = {}) {
       release: mappedReleaseData,
       store: mappedStoreData,
       milestone: mappedMilestoneData,
+      milestoneIssues: mappedMilestoneIssuesData,
       prs: mappedPRData,
       config: repoConfig,
     });
@@ -155,6 +160,24 @@ function mapMilestoneData(milestoneInfo) {
 }
 
 /**
+ * Map milestone issues data to standardized format
+ * @param {object[]} milestoneIssues - Milestone issues information
+ * @returns {object[]} Mapped milestone issues data
+ */
+function mapMilestoneIssuesData(milestoneIssues) {
+  if (!Array.isArray(milestoneIssues)) {
+    return [];
+  }
+
+  return milestoneIssues.map((issue) => ({
+    number: issue.number,
+    title: issue.title,
+    url: issue.url,
+    state: issue.state,
+  }));
+}
+
+/**
  * Map PR data to standardized format
  * @param {object[]} prInfo - Recent pull requests information
  * @returns {object[]} Mapped PR data
@@ -178,7 +201,7 @@ function mapPRData(prInfo) {
  * @param {object} mappedData - All mapped data components
  * @returns {object} Complete app data structure
  */
-function createFinalAppData({ repository, release, store, milestone, prs, config }) {
+function createFinalAppData({ repository, release, store, milestone, milestoneIssues, prs, config }) {
   // Use platforms from config directly
   const platforms = config.platforms || [];
 
@@ -201,6 +224,7 @@ function createFinalAppData({ repository, release, store, milestone, prs, config
     latestRelease: release,
     storeVersions,
     milestone,
+    milestoneIssues,
     recentPRs: prs,
   };
 }

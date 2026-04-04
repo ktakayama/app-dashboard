@@ -1,0 +1,33 @@
+<script lang="ts">
+  interface Props {
+    state: 'open' | 'closed';
+    issueNumber: number;
+    title: string;
+    url: string;
+  }
+
+  let { state, issueNumber, title, url }: Props = $props();
+
+  const stateStyles = {
+    open: 'bg-success-500 text-white',
+    closed: 'bg-purple-500 text-white',
+  };
+
+  const currentStateStyle = $derived(stateStyles[state]);
+</script>
+
+<li class="list-none">
+  <a
+    href={url}
+    target="_blank"
+    rel="noopener"
+    class="block p-2 bg-gray-50 rounded mb-1 text-xs hover:bg-gray-200 transition-colors duration-200 text-gray-900 no-underline"
+  >
+    <span
+      class="inline-block px-1.5 py-0.5 rounded text-xs font-semibold uppercase mr-2 {currentStateStyle}"
+    >
+      {state === 'open' ? 'Open' : 'Closed'}
+    </span>
+    #{issueNumber}: {title}
+  </a>
+</li>

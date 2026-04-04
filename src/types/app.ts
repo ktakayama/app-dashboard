@@ -15,6 +15,13 @@ export interface Milestone {
   url: string;
 }
 
+export interface MilestoneIssue {
+  number: number;
+  title: string;
+  url: string;
+  state: 'open' | 'closed';
+}
+
 export interface Release {
   version: string;
   date: string;
@@ -38,6 +45,7 @@ export interface App {
     playStore?: string;
   };
   milestone?: Milestone;
+  milestoneIssues?: MilestoneIssue[];
   recentPRs?: PullRequest[];
 }
 

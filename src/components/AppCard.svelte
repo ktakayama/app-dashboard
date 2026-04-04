@@ -3,6 +3,7 @@
   import PlatformBadge from './PlatformBadge.svelte';
   import ProgressBar from './ProgressBar.svelte';
   import PRStateLabel from './PRStateLabel.svelte';
+  import MilestoneIssueLabel from './MilestoneIssueLabel.svelte';
 
   interface Props {
     app: App;
@@ -99,4 +100,21 @@
       </ul>
     {/if}
   </div>
+
+  <!-- Milestone Issues Section -->
+  {#if app.milestoneIssues && app.milestoneIssues.length > 0}
+    <div class="bg-gray-100 p-3 rounded-md">
+      <div class="text-sm font-semibold mb-2.5 text-gray-900">📋 Milestone Issues</div>
+      <ul class="list-none m-0 p-0 flex flex-col gap-1">
+        {#each app.milestoneIssues as issue}
+          <MilestoneIssueLabel
+            state={issue.state}
+            issueNumber={issue.number}
+            title={issue.title}
+            url={issue.url}
+          />
+        {/each}
+      </ul>
+    </div>
+  {/if}
 </div>
