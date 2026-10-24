@@ -39,21 +39,19 @@ try {
     <main>
       <Header lastUpdated={appsData?.lastUpdated} appCount={appsData?.apps.length} client:load />
 
-      {
-        error ? (
-          <div class='p-5 bg-error-50 border border-error-200 rounded m-5'>
-            <strong>エラー:</strong> {error}
-          </div>
-        ) : appsData ? (
-          <div class='apps-grid'>
-            {appsData.apps.map((app) => (
-              <AppCard app={app} client:load />
-            ))}
-          </div>
-        ) : (
-          <p>データを読み込み中...</p>
-        )
-      }
+      {error ? (
+        <div class='p-5 bg-error-50 border border-error-200 rounded m-5'>
+          <strong>エラー:</strong> {error}
+        </div>
+      ) : appsData ? (
+        <div class='apps-grid'>
+          {appsData.apps.map((app) => (
+            <AppCard app={app} client:load />
+          ))}
+        </div>
+      ) : (
+        <p>データを読み込み中...</p>
+      )}
     </main>
   </body>
 </html>
